@@ -47,6 +47,7 @@ rules:
   - DST-PORT,41641,DIRECT
   - DST-PORT,41652,DIRECT
   - DOMAIN-SUFFIX,windows.com,DIRECT
+  - DOMAIN-SUFFIX,microsoft.com,DIRECT
   - RULE-SET,proxylite1,♻️ 香港自动
   - RULE-SET,proxylite2,DIRECT
   - RULE-SET,proxylite3,♻️ 自动选择
