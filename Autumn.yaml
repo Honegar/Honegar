@@ -46,6 +46,7 @@ rules:
   - DST-PORT,888,DIRECT
   - DST-PORT,41641,DIRECT
   - DST-PORT,41652,DIRECT
+  - DOMAIN-SUFFIX,steamcontent.com,DIRECT
   - DOMAIN-SUFFIX,windows.com,DIRECT
   - RULE-SET,proxylite1,♻️ 香港自动
   - RULE-SET,proxylite2,DIRECT
