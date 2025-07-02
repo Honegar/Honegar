@@ -51,6 +51,11 @@ rules:
   - DOMAIN-SUFFIX,apple.com,DIRECT
   - DOMAIN-SUFFIX,bybit.com,♻️ 韩国自动
   - DOMAIN-SUFFIX,wise.com,♻️ 韩国自动
+  - DOMAIN-SUFFIX,byapps.net,♻️ 韩国自动
+  - DOMAIN-SUFFIX,byd3c3.com,♻️ 韩国自动
+  - DOMAIN-SUFFIX,byabcde.com,♻️ 韩国自动
+  - DOMAIN-SUFFIX,bybit.biz,♻️ 韩国自动
+  - DOMAIN-SUFFIX,bybdc6.com,♻️ 韩国自动
   - DOMAIN-SUFFIX,windows.com,DIRECT
   - RULE-SET,proxylite1,♻️ 香港自动
   - RULE-SET,proxylite2,DIRECT
