@@ -34,6 +34,7 @@ proxy-groups:
   - {name: ♻️ 日本自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$" }
   - {name: ♻️ 美国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|日|韩|新)).)*$"}
   - {name: ♻️ 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 58, filter: "^((?!(DIRECT|直连)).)*$"}
+  - {name: ♻️ 韩国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(韩|KR|(?i)Hong))^((?!(台|日|港|新|深|美)).)*$"}
   - {name: 🌐 全部节点, type: select, include-all: true}
 
 # 规则匹配
@@ -47,6 +48,9 @@ rules:
   - DST-PORT,41641,DIRECT
   - DST-PORT,41652,DIRECT
   - DOMAIN-SUFFIX,steamcontent.com,DIRECT
+  - DOMAIN-SUFFIX,apple.com,DIRECT
+  - DOMAIN-SUFFIX,bybit.com,♻️ 韩国自动
+  - DOMAIN-SUFFIX,wise.com,♻️ 韩国自动
   - DOMAIN-SUFFIX,windows.com,DIRECT
   - RULE-SET,proxylite1,♻️ 香港自动
   - RULE-SET,proxylite2,DIRECT
