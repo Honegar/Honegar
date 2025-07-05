@@ -48,8 +48,10 @@ rules:
   - DST-PORT,888,DIRECT
   - DST-PORT,41641,DIRECT
   - DST-PORT,41652,DIRECT
+  - DOMAIN-SUFFIX,icbc.com,DIRECT
   - DOMAIN-SUFFIX,steamcontent.com,DIRECT
   - DOMAIN-SUFFIX,apple.com,DIRECT
+  - DOMAIN-SUFFIX,bing.com,DIRECT
   - DOMAIN-SUFFIX,rfi.fr,🌐 全部节点
   - DOMAIN-SUFFIX,bybit.com,♻️ 韩国自动
   - DOMAIN-SUFFIX,wise.com,♻️ 韩国自动
