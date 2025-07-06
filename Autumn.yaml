@@ -40,8 +40,11 @@ proxy-groups:
 # 规则匹配
 # 此规则部分没有做防泄露处理，因为弊严重大于利！
 rules:
-  - IP-CIDR,127.0.0.1/32,DIRECT
+  - RULE-SET,cn_ip,DIRECT
+  - RULE-SET,cn_domain,DIRECT
   - RULE-SET,DIRECT,DIRECT
+  - RULE-SET,private_domain,DIRECT
+  - IP-CIDR,127.0.0.1/32,DIRECT
   - DOMAIN-SUFFIX,rfi.fr,♻️ 自动选择
   - DOMAIN-SUFFIX,bybit.com,♻️ 韩国自动
   - DOMAIN-SUFFIX,wise.com,♻️ 韩国自动
@@ -59,11 +62,9 @@ rules:
   - RULE-SET,netflix_domain,🎥 NETFLIX
   - RULE-SET,gfw_domain,♻️ 自动选择
   - RULE-SET,geolocation-!cn,♻️ 自动选择
-  - RULE-SET,cn_domain,DIRECT
   - RULE-SET,google_ip,🍀 Google,no-resolve
   - RULE-SET,netflix_ip,🎥 NETFLIX,no-resolve
   - RULE-SET,telegram_ip,📲 Telegram,no-resolve
-  - RULE-SET,cn_ip,DIRECT
   - MATCH,🐟 漏网之鱼
 
 
