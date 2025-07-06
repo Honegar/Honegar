@@ -57,9 +57,7 @@ rules:
   - DOMAIN-SUFFIX,bybit.biz,♻️ 韩国自动
   - DOMAIN-SUFFIX,bybdc6.com,♻️ 韩国自动
   - DOMAIN-SUFFIX,windows.com,DIRECT
-  - RULE-SET,proxylite1,♻️ 香港自动
-  - RULE-SET,proxylite2,DIRECT
-  - RULE-SET,proxylite3,♻️ 自动选择
+  - RULE-SET,DIRECT,DIRECT
   - RULE-SET,private_domain,DIRECT
   - RULE-SET,github_domain,👨🏿‍💻 GitHub
   - RULE-SET,youtube_domain,📹 YouTube
@@ -84,9 +82,7 @@ rule-anchor:
   class: &class {type: http, interval: 86400, behavior: classical, format: text}
 rule-providers: 
   private_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
-  proxylite1: { <<: *class, url: "https://raw.githubusercontent.com/Honegar/Honegar/refs/heads/main/HV2.list"}
-  proxylite2: { <<: *class, url: "https://raw.githubusercontent.com/Honegar/Honegar/refs/heads/main/Direct2.list"}
-  proxylite3: { <<: *class, url: "https://raw.githubusercontent.com/Honegar/Honegar/refs/heads/main/HV.list"}
+  DIRECT: { <<: *class, url: "https://raw.githubusercontent.com/Honegar/Honegar/refs/heads/main/Direct.list"}
   youtube_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"}
   google_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"}
   github_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"}
