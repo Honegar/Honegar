@@ -42,9 +42,20 @@ proxy-groups:
 rules:
   - RULE-SET,cn_ip,DIRECT
   - RULE-SET,cn_domain,DIRECT
-  - RULE-SET,DIRECT,DIRECT
+  - RULE-SET,Speed,DIRECT
   - RULE-SET,private_domain,DIRECT
   - IP-CIDR,127.0.0.1/32,DIRECT
+  - DOMAIN-SUFFIX,tailscale.com,DIRECT
+  - DOMAIN-SUFFIX,bochk.com,DIRECT
+  - DOMAIN-SUFFIX,hsbc.com,DIRECT
+  - DOMAIN-SUFFIX,hsbc.com,DIRECT
+  - DOMAIN-SUFFIX,icbc.com,DIRECT
+  - DOMAIN-SUFFIX,steamcontent.com,DIRECT
+  - DOMAIN-SUFFIX,apple.com,DIRECT
+  - DOMAIN-SUFFIX,bing.com,DIRECT
+  - DOMAIN-SUFFIX,windows.com,DIRECT
+  - DOMAIN-SUFFIX,tealiumiq.com,DIRECT
+  - DOMAIN-SUFFIX,iqcdn.com,DIRECT
   - DOMAIN-SUFFIX,rfi.fr,♻️ 自动选择
   - DOMAIN-SUFFIX,bybit.com,♻️ 韩国自动
   - DOMAIN-SUFFIX,wise.com,♻️ 韩国自动
@@ -75,7 +86,7 @@ rule-anchor:
   class: &class {type: http, interval: 86400, behavior: classical, format: text}
 rule-providers: 
   private_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
-  DIRECT: { <<: *class, url: "https://raw.githubusercontent.com/Honegar/Honegar/refs/heads/main/Direct.list"}
+  Speed_class: { <<: *class, url: "https://raw.githubusercontent.com/Honegar/Honegar/refs/heads/main/Direct.list"}
   youtube_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"}
   google_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"}
   github_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"}
