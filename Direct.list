@@ -585,11 +585,11 @@ DOMAIN-SUFFIX,zhipin.com
 DOMAIN-SUFFIX,zhongsou.com
 DOMAIN-SUFFIX,zhuihd.com
 DOMAIN-SUFFIX,tailscale.com
-DOMAIN-SUFFIX,hsbc.com.hk
 DOMAIN-SUFFIX,bochk.com
 DOMAIN-SUFFIX,hsbc.com
 DOMAIN-SUFFIX,icbc.com
-DOMAIN-SUFFIX,steamcontent.com,DIRECT
-DOMAIN-SUFFIX,apple.com,DIRECT
-DOMAIN-SUFFIX,bing.com,DIRECT
+DOMAIN-SUFFIX,steamcontent.com
+DOMAIN-SUFFIX,apple.com
+DOMAIN-SUFFIX,bing.com
 DOMAIN-SUFFIX,windows.com
+DOMAIN-SUFFIX,tealiumiq.com
