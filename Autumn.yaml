@@ -1,7 +1,18 @@
+# 注意规则在满足自己需求情况下，尽量做到精简，不要过度复杂，以免影响性能。
 # 机场订阅
 proxy-providers:
   Airport1:
-    url: "https://dy.588511.xyz/api/v1/client/subscribe?token=eec64a072c369cf76afb1c3b0b25a90f"
+    url: "https://dy.588511.xyz/api/v1/client/subscribe?token=eec64a072c369cf790f"
+    type: http
+    interval: 86400
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+    proxy: 直连
+    
+  Airport2:
+    url: "https://sub.autumn.6231326.xyz/sub?token=4015d734d501d2b837bdf6"
     type: http
     interval: 86400
     health-check:
@@ -12,8 +23,8 @@ proxy-providers:
     
 # 节点信息
 proxies:
-  - {name: "Autumn", type: ss,server: alvgw.xyz,port: 28737,cipher: aes-256-gcm,password: "@"}
-  - {name: "香港家宽-电信", type: ss,server: hkbn.6231326.xyz,port: 8880,cipher: 2022-blake3-aes-256-gcm,password: "NeSExeIGcBCk7ga7yUNhv2IgJJ5d/LdWoncW+bxT/c6UUpHeKQImXSt6rNWDSs="}
+  - {name: "Autumn", type: ss,server: alvgw.xyz,port: 237,cipher: aes-256-gcm,password: "@"}
+  - {name: "香港家宽-电信", type: ss,server: hkbn.6231326.xyz,port: 8880,cipher: 2022-blake3-aes-256-gcm,password: "NeSExeIGzUc=:/616KYf0g7BsDE0CxP+xT/c6UUpHeKQImXSt6rNWDSs="}
   - {name: 直连, type: direct}
   
 # 出站策略
@@ -27,13 +38,13 @@ proxy-groups:
   - {name: ✈️ Speedtest, <<: *pr}
   - {name: 🐟 漏网之鱼, <<: *pr}
   - {name: 🇭🇰 香港节点, type: select, include-all: true, filter: "(?i)港|hk|hongkong|hong kong"}
-  - {name: 📲 Telegram, type: url-test, include-all: true, tolerance: 20, interval: 58, filter: "(?=.*(香港家宽|Autumn|(?i)Autumn))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: 📲 Telegram, type: fallback, include-all: true, tolerance: 20, interval: 16, filter: "(?=.*(香港宽频|电信|移动|Autumn|(?i)Autumn))^((?!(台|日|韩|德|新|深|美)).)*$"}
   - {name: 🇯🇵 日本节点, type: select, include-all: true, filter: "(?i)日|jp|japan"}
   - {name: 🇺🇲 美国节点, type: select, include-all: true, filter: "(?i)美|us|unitedstates|united states"}
-  - {name: ♻️ 香港自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: ♻️ 香港自动, type: url-test, include-all: true, tolerance: 20, interval: 24, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
   - {name: ♻️ 日本自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$" }
   - {name: ♻️ 美国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|日|韩|新)).)*$"}
-  - {name: ♻️ 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 58, filter: "^((?!(DIRECT|直连)).)*$"}
+  - {name: ♻️ 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 18, filter: "^((?!(DIRECT|直连)).)*$"}
   - {name: ♻️ 韩国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(韩|KR|(?i)Korea))^((?!(台|日|港|新|深|美)).)*$"}
   - {name: 🌐 全部节点, type: select, include-all: true}
 
@@ -44,7 +55,10 @@ rules:
   - RULE-SET,cn_domain,DIRECT
   - RULE-SET,private_domain,DIRECT
   - IP-CIDR,127.0.0.1/32,DIRECT
-  - DOMAIN-SUFFIX,rfi.fr,♻️ 自动选择
+  - DOMAIN-SUFFIX,hsbc.com,DIRECT
+  - DOMAIN-SUFFIX,bochk.com,DIRECT
+  - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
+  - DOMAIN-SUFFIX,rfi.com,🌐 全部节点
   - DOMAIN-SUFFIX,bybit.com,♻️ 韩国自动
   - DOMAIN-SUFFIX,wise.com,♻️ 韩国自动
   - DOMAIN-SUFFIX,byapps.net,♻️ 韩国自动
