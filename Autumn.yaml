@@ -36,7 +36,7 @@ proxy-groups:
   - {name: 🎥 NETFLIX, <<: *pr}
   - {name: ✈️ Speedtest, <<: *pr}
   - {name: 🐟 漏网之鱼, <<: *pr}
-  - {name: 📲 Telegram, type: fallback, include-all: true, tolerance: 18, interval: 18, filter: "(?=.*(香港宽频|电信|移动|Autumn|(?i)Autumn))^((?!(台|日|韩|德|新|深|美)).)*$"}
+  - {name: 📲 Telegram, type: url-test, include-all: true, tolerance: 18, interval: 18, filter: "(?=.*(香港宽频|电信|移动|Autumn|(?i)Autumn))^((?!(台|日|韩|德|新|深|美)).)*$"}
   - {name: ♻️ 香港自动, type: url-test, include-all: true, tolerance: 18, interval: 18, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
   - {name: ♻️ 日本自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$" }
   - {name: ♻️ 美国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(美|US|(?i)States|America))^((?!(港|台|日|韩|新)).)*$"}
