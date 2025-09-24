@@ -1,8 +1,8 @@
 # 注意规则在满足自己需求情况下，尽量做到精简，不要过度复杂，以免影响性能。
 # 机场订阅
 proxy-providers:
-  Airport1:
-    url: "https://dy.58/v1/client/subscribe?token=eec64a072c369cf76afb1c3b"
+  Airport:
+    url: "httpaee"
     type: http
     interval: 86400
     health-check:
@@ -11,8 +11,9 @@ proxy-providers:
       interval: 300
     proxy: 直连
     
+    proxy-providers:
   Airport2:
-    url: "https://sub.aut6.xyz/sub?token=4015d734d501"
+    url: "https61a432"
     type: http
     interval: 86400
     health-check:
@@ -21,11 +22,9 @@ proxy-providers:
       interval: 300
     proxy: 直连
     
-# 节点信息
+    # 节点信息
 proxies:
-  - {name: "Autumn",type: ss, server: h326.xyz, port: 27,cipher: aes-256-gcm,password: "@N"}
-  - {name: 直连, type: direct}
-  
+    - {name: 直连, type: direct}
 # 出站策略
 # 注意锚点必须放在引用的上方，可以集中把锚点全部放yaml的顶部。
 pr: &pr {type: select, proxies: [♻️ 香港自动, ♻️ 日本自动, ♻️ 美国自动, ♻️ 自动选择, 🌐 全部节点, 直连]}
@@ -35,7 +34,7 @@ proxy-groups:
   - {name: 👨🏿‍💻 GitHub, <<: *pr}
   - {name: 🎥 NETFLIX, <<: *pr}
   - {name: 🐟 漏网之鱼, <<: *pr}
-  - {name: 📲 Telegram, type: url-test, include-all: true, tolerance: 18, interval: 18, filter: "(?=.*(香港宽频|电信|移动|Autumn|(?i)Autumn))^((?!(台|日|韩|德|新|深|美)).)*$"}
+  - {name: 📲 Telegram, type: url-test, include-all: true, tolerance: 18, interval: 18, filter: "(?=.*(香港宽频|电信|移动|香港家宽|(?i)香港家宽))^((?!(台|日|韩|德|新|深|美)).)*$"}
   - {name: ♻️ 香港自动, type: url-test, include-all: true, tolerance: 18, interval: 18, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
   - {name: ♻️ 日本自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(台|韩|新|美)).)*$" }
   - {name: ♻️ 美国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(美|US|(?i)States|America))^((?!(台|日|韩|新)).)*$"}
