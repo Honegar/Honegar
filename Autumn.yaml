@@ -49,6 +49,8 @@ rules:
   - RULE-SET,cn_domain,DIRECT
   - RULE-SET,private_domain,DIRECT
   - IP-CIDR,127.0.0.1/32,DIRECT
+  - DOMAIN-SUFFIX,apple.com,DIRECT
+  - DOMAIN-SUFFIX,xiaohongshu.com,DIRECT
   - DOMAIN-SUFFIX,hsbc.com,DIRECT
   - DOMAIN-SUFFIX,bochk.com,DIRECT
   - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
