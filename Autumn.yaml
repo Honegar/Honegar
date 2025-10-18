@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
   Airport:
-    url: "httpaee"
+    url: "https://alvgw.xyz/s/924b350f8235584bdee9a9cc72928aee"
     type: http
     interval: 86400
     health-check:
@@ -13,7 +13,7 @@ proxy-providers:
     
     proxy-providers:
   Airport2:
-    url: "https61a432"
+    url: "https://feed.iggv5.com/c/1c263ffd-050e-47f9-8016-89c40061a432"
     type: http
     interval: 86400
     health-check:
@@ -32,9 +32,9 @@ proxy-groups:
   - {name: 📹 YouTube, <<: *pr}
   - {name: 🍀 Google, <<: *pr}
   - {name: 👨🏿‍💻 GitHub, <<: *pr}
-  - {name: 🎥 NETFLIX, <<: *pr}
+  - {name: 🎥 NETFLIX, type: select, include-all: true}
   - {name: 🐟 漏网之鱼, <<: *pr}
-  - {name: 📲 Telegram, type: url-test, include-all: true, tolerance: 18, interval: 18, filter: "(?=.*(香港宽频|电信|移动|香港家宽|(?i)香港家宽))^((?!(台|日|韩|德|新|深|美)).)*$"}
+  - {name: 📲 Telegram, type: url-test, include-all: true, tolerance: 8, interval: 28, filter: "(?=.*(香港|(?i)香港))^((?!(台|日|韩|德|新|深|美)).)*$"}
   - {name: ♻️ 香港自动, type: url-test, include-all: true, tolerance: 18, interval: 18, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
   - {name: ♻️ 日本自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(台|韩|新|美)).)*$" }
   - {name: ♻️ 美国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(美|US|(?i)States|America))^((?!(台|日|韩|新)).)*$"}
@@ -49,8 +49,8 @@ rules:
   - RULE-SET,cn_domain,DIRECT
   - RULE-SET,private_domain,DIRECT
   - IP-CIDR,127.0.0.1/32,DIRECT
-  - DOMAIN-SUFFIX,apple.com,DIRECT
   - DOMAIN-SUFFIX,xiaohongshu.com,DIRECT
+  - DOMAIN-SUFFIX,apple.com,DIRECT
   - DOMAIN-SUFFIX,hsbc.com,DIRECT
   - DOMAIN-SUFFIX,bochk.com,DIRECT
   - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
