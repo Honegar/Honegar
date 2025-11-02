@@ -360,6 +360,7 @@ proxy-groups:
 # ========================
 rules:
 
+  - DOMAIN-SUFFIX,tailscale.com,DIRECT
   - DOMAIN-SUFFIX,gotinder.com,DIRECT
   - DOMAIN-SUFFIX,tinder.com,DIRECT
   - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
