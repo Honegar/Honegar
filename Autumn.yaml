@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
   Airport1:
-    url: "https://dd"
+    url: "h"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
 Autumn:
-    url: "httpsMTAyZQ"
+    url: "httQ"
     type: http
     interval: 86400
     health-check:
@@ -193,16 +193,16 @@ proxy-groups:
   - name: 香港-手选
     type: select
     include-all: true
-    filter: "(?=.*(广港|香港|HK|Hong Kong|🇭🇰|HongKong)).*$"
+    filter: "(?=.*(香港)).*$"
     
   - name: 香港-智选
     type: smart
     include-all: true
-    policy-priority: "Autumn:0.8"
+    policy-priority: "香港:1.2"
     uselightgbm: true
     collectdata: true
     interval: 300
-    filter: "(?=.*(广港|香港|HK|Hong Kong|🇭🇰|HongKong)).*$"
+    filter: "(?=.*(香港)).*$"
  
   # 台湾组
 
