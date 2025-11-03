@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
   Airport1:
-    url: "https://alvincloudnetwork.online/s/ae5e2d283c04d78903b8eaa0b0236cdd"
+    url: "https://dd"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
 Autumn:
-    url: "https://dy.588511.xyz/api/v1/client/subscribe?token=MjAzMzE6OTcyNDJjNjI5MmI0NzgzZGYwNTJkMTFiNzM4MWMwMGQ3YTkxMTAyZQ"
+    url: "httpsMTAyZQ"
     type: http
     interval: 86400
     health-check:
