@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
   Airport1:
-    url: "ht"
+    url: "https://alvincloudnetwork.online/s/ae5e2d283c04d78903b8eaa0b0236cdd"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
 Autumn:
-    url: "h"
+    url: "https://dy.588511.xyz/api/v1/client/subscribe?token=MjAzMzE6OTcyNDJjNjI5MmI0NzgzZGYwNTJkMTFiNzM4MWMwMGQ3YTkxMTAyZQ"
     type: http
     interval: 86400
     health-check:
@@ -103,9 +103,12 @@ dns:
     - 223.5.5.5
   proxy-server-nameserver:
     - 119.29.29.29
-  # namesever第一次启用软件时尽量用运营商提供的DNS，
+  # namesever尽量用运营商提供的DNS
   nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
     - 114.114.114.114
+    - 8.8.8.8
 # 策略组定义
 # ========================
 default: &default
@@ -360,6 +363,9 @@ proxy-groups:
 # ========================
 rules:
 
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve  # 本地回环
   - DOMAIN-SUFFIX,tailscale.com,DIRECT
   - DOMAIN-SUFFIX,gotinder.com,DIRECT
   - DOMAIN-SUFFIX,tinder.com,DIRECT
