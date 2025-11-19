@@ -1,8 +1,8 @@
 # 注意规则在满足自己需求情况下，尽量做到精简，不要过度复杂，以免影响性能。
 # 机场订阅
 proxy-providers:
-  Airport1:
-    url: "h"
+   Airport1:
+    url: "h19"
     type: http
     interval: 86400
     health-check:
@@ -11,8 +11,8 @@ proxy-providers:
       interval: 300
     proxy: 直连
 
-Autumn:
-    url: "httQ"
+Airport2:
+    url: "httc"
     type: http
     interval: 86400
     health-check:
@@ -20,6 +20,7 @@ Autumn:
       url: https://www.gstatic.com/generate_204
       interval: 300
     proxy: 直连
+
 
         
     # 节点信息
@@ -105,10 +106,9 @@ dns:
     - 119.29.29.29
   # namesever尽量用运营商提供的DNS
   nameserver:
+    - 114.114.114.114    
     - 223.5.5.5
     - 119.29.29.29
-    - 114.114.114.114
-    - 8.8.8.8
 # 策略组定义
 # ========================
 default: &default
@@ -174,7 +174,7 @@ proxy-groups:
   - name: 所有-智选
     type: smart
     include-all: true
-    policy-priority: "香港:1.2;Autumn:0.8"
+    policy-priority: "香港:1.2;Airport2:0.8"
     uselightgbm: true
     collectdata: true
     interval: 300
@@ -220,7 +220,7 @@ proxy-groups:
   - name: 台湾-智选
     type: smart
     include-all: true
-    policy-priority: "Autumn:0.8"
+    policy-priority: "Airport2:0.8"
     uselightgbm: true
     collectdata: true
     interval: 300
@@ -242,7 +242,7 @@ proxy-groups:
   - name: 日本-智选
     type: smart
     include-all: true
-    policy-priority: "Autumn:0.8"
+    policy-priority: "Airport2:0.8"
     uselightgbm: true
     collectdata: true
     interval: 300
@@ -264,7 +264,7 @@ proxy-groups:
   - name: 新加坡-智选
     type: smart
     include-all: true
-    policy-priority: "Autumn:0.8"
+    policy-priority: "Airport2:0.8"
     uselightgbm: true
     collectdata: true
     interval: 300
@@ -286,7 +286,7 @@ proxy-groups:
   - name: 韩国-智选
     type: smart
     include-all: true
-    policy-priority: "Autumn:0.8"
+    policy-priority: "Airport2:0.8"
     uselightgbm: true
     collectdata: true
     interval: 300
@@ -330,7 +330,7 @@ proxy-groups:
   - name: 英国-智选
     type: smart
     include-all: true
-    policy-priority: "Autumn:0.8"
+    policy-priority: "Airport2:0.8"
     uselightgbm: true
     collectdata: true
     interval: 300
@@ -352,7 +352,7 @@ proxy-groups:
   - name: 其他-智选
     type: smart
     include-all: true
-    policy-priority: "Autumn:0.8"
+    policy-priority: "Airport2:0.8"
     uselightgbm: true
     collectdata: true
     interval: 300
@@ -363,10 +363,6 @@ proxy-groups:
 # ========================
 rules:
 
-  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
-  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
-  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve  # 本地回环
-  - DOMAIN-SUFFIX,tailscale.com,DIRECT
   - DOMAIN-SUFFIX,gotinder.com,DIRECT
   - DOMAIN-SUFFIX,tinder.com,DIRECT
   - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
