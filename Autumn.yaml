@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "hasdsadsa"
+    url: "httpb92cf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,17 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "hasdas"
+    url: "httpaab2-b7b503a15e64"
+    type: http
+    interval: 86400
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+    proxy: 直连
+
+   Airport3:
+    url: "httpd652584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -105,8 +115,8 @@ dns:
     - 119.29.29.29
   # namesever尽量用运营商提供的DNS
   nameserver:
-    - 114.114.114.114    
     - 223.5.5.5
+    - 114.114.114.114
     - 119.29.29.29
 # 策略组定义
 # ========================
@@ -361,7 +371,8 @@ proxy-groups:
 # 规则引擎（rules）
 # ========================
 rules:
-
+  - SRC-PORT,63219,DIRECT
+  - DOMAIN-SUFFIX,tailscale.com,DIRECT
   - DOMAIN-SUFFIX,gotinder.com,DIRECT
   - DOMAIN-SUFFIX,tinder.com,DIRECT
   - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
