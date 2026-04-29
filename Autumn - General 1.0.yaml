@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "https://01ac9b92cf4c9cd506122e69b19"
+    url: "https:/c9b92cf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "https://fee28997f-aaaf-4c4b-aab2-b7b503a15e64"
+    url: "htaaa7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,7 @@ proxy-providers:
     proxy: 直连
 
    Airport3:
-    url: "https://pw78e8eac672026d652584acbdaaf7d"
+    url: "httpclient/58478e8eac672026d652584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -88,56 +88,57 @@ tun:
   auto-redirect: true
   auto-detect-interface: true
 
-# ==================== DNS 模块 ====================
 dns:
   enable: true
   listen: 0.0.0.0:1053
   ipv6: false
   respect-rules: true
   enhanced-mode: fake-ip
-  fake-ip-range: 28.0.0.1/8
-  
-  # 扩展过滤名单，防止特定服务断连
+  fake-ip-range: 198.18.0.1/16 # 修正为标准保留段  # 扩展过滤名单，确保兼容性
   fake-ip-filter:
     - "*.lan"
     - "*.local"
+    - "localhost.ptlogin2.qq.com" # 解决腾讯系登录慢
+    - "+.srv.nintendo.net" # 任天堂服务
+    - "+.stun.playstation.net" # PS 联机
+    - "+.msftconnecttest.com" # Windows 联网检测
+    - "+.msftncsi.com"
     - "rule-providers"
     - "geosite:cn"
     - "geosite:apple"
     - "geosite:category-ads-all"
-    - "xmcdn.com" # 喜马拉雅等音频流
-    - "*.ximalaya.com"
-    
+    - "xmcdn.com"
+    - "*.ximalaya.com"  # 用于解析 DNS 服务器域名的本地 DNS
   default-nameserver:
     - 223.5.5.5
-    - 119.29.29.29
-    
+    - 119.29.29.29  # 用于解析代理服务器地址
   proxy-server-nameserver:
     - https://dns.alidns.com/dns-query
-    - 223.5.5.5
-
+    - 223.5.5.5  # 策略分流：特定域名强制使用特定 DNS
   nameserver-policy:
-    "geosite:cn": [223.5.5.5, 119.29.29.29]
-    "geosite:apple": [223.5.5.5, 119.29.29.29]
-    
+    "geosite:cn,apple": [223.5.5.5, 119.29.29.29]
+    "geosite:category-ads-all": "127.0.0.1" # 广告屏蔽，直接指向空
+    "geosite:geolocation-!cn": [https://dns.cloudflare.com/dns-query, https://dns.google/dns-query]  # 默认 DNS (处理未匹配到 policy 的请求)
   nameserver:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
+    - https://dns.cloudflare.com/dns-query # 建议增加国外 DoH
+    - https://dns.google/dns-query
 
 # ==================== 策略组 ====================
 proxy-groups:
   - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "(?i)香港|HK|日本|JP|新加坡|SG", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
-  - { name: AI-Services, type: select, proxies: [美国-手选, 日本-手选, 新加坡-手选, ⚡️ 自动优选, 所有-手选] }
-  - { name: Streaming, type: fallback, interval: 300, proxies: [香港-手选, 台湾-手选, 所有-手选] }
-  - { name: Social-Media, type: select, proxies: [⚡️ 自动优选, 所有-手选] }
+  - { name: AI-Services, type: select, proxies: [美国-手选, 香港-优选, 新加坡-手选, ⚡️ 自动优选, 所有-手选] }
+  - { name: Streaming, type: fallback, interval: 300, proxies: [⚡️ 自动优选, 香港-优选, 台湾-手选, 所有-手选] }
+  - { name: Social-Media, type: select, proxies: [香港-优选, 所有-手选] }
   - { name: GitHub, type: select, proxies: [⚡️ 自动优选, 直连] }
   - { name: Apple, type: select, proxies: [直连, ⚡️ 自动优选] }
-  - { name: Google, type: select, proxies: [⚡️ 自动优选, 所有-手选] }
-  - { name: 国外, type: select, proxies: [⚡️ 自动优选, 所有-手选] }
+  - { name: Google, type: select, proxies: [香港-优选, 所有-手选] }
+  - { name: 国外, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选] }
   - { name: 国内, type: select, proxies: [直连, 拒绝] }
   - { name: 其他, type: select, proxies: [⚡️ 自动优选, 所有-手选, 直连] }
   - { name: 所有-手选, type: select, include-all: true, filter: "^((?!(直连|拒绝)).)*$" }
-  - { name: 香港-手选, type: select, include-all: true, filter: "(?i)香港|HK|Hong Kong|🇭🇰" }
+  - { name: 香港-优选, type: url-test, include-all: true, filter: "(?i)香港|HK", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
   - { name: 台湾-手选, type: select, include-all: true, filter: "(?i)台湾|台灣|TW|Tai Wan|🇹🇼" }
   - { name: 日本-手选, type: select, include-all: true, filter: "(?i)日本|JP|🇯🇵" }
   - { name: 新加坡-手选, type: select, include-all: true, filter: "(?i)新加坡|SG|🇸🇬" }
