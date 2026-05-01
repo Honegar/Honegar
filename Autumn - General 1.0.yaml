@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "htt01ac9b92cf4c9cd506122e69b19"
+    url: "httb92cf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "httpaf-4c4b-aab2-b7b503a15e64"
+    url: "htt-aab2-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,7 @@ proxy-providers:
     proxy: 直连
 
    Airport3:
-    url: "httpi/v1/client/58478e8eac672026d652584acbdaaf7d"
+    url: "htt78e8eac672026d652584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -88,6 +88,7 @@ tun:
   auto-redirect: true
   auto-detect-interface: true
 
+# DNS模块
 dns:
   enable: true
   listen: 0.0.0.0:1053
@@ -133,6 +134,7 @@ proxy-groups:
   - { name: Social-Media, type: select, proxies: [香港-优选, 所有-手选] }
   - { name: GitHub, type: select, proxies: [⚡️ 自动优选, 直连] }
   - { name: Apple, type: select, proxies: [直连, ⚡️ 自动优选] }
+  - { name: Game, type: select, proxies: [直连, ⚡️ 自动优选] }
   - { name: Google, type: select, proxies: [香港-优选, 所有-手选] }
   - { name: 国外, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选] }
   - { name: 国内, type: select, proxies: [直连, 拒绝] }
@@ -150,6 +152,11 @@ rule-providers:
   AI: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/openai.mrs", proxy: ⚡️ 自动优选 }
   Claude: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/claude.mrs", proxy: ⚡️ 自动优选 }
   # 修正了 Gemini 的 URL 路径
+  Microsoft: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/microsoft.mrs", proxy: ⚡️ 自动优选 }
+  Epic: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Epic/Epic.list", proxy: ⚡️ 自动优选 }
+  Steam: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/steam.mrs", proxy: ⚡️ 自动优选 }
+  EA: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/EA/EA.list", proxy: ⚡️ 自动优选 }
+  UBI: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/UBI/UBI.list", proxy: ⚡️ 自动优选 }
   Gemini: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/gemini.mrs", proxy: ⚡️ 自动优选 }
   Telegram: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/telegram.mrs", proxy: ⚡️ 自动优选 }
   Streaming: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/netflix.mrs", proxy: ⚡️ 自动优选 }
@@ -188,6 +195,11 @@ rules:
   - RULE-SET,Social,Social-Media
   - RULE-SET,GitHub,GitHub
   - RULE-SET,Apple,Apple
+  - RULE-SET,Microsoft,Game
+  - RULE-SET,Epic,Game
+  - RULE-SET,Steam,Game
+  - RULE-SET,EA,Game
+  - RULE-SET,UBI,Game
   - RULE-SET,Google,Google
   
   # 4. 国内流量
