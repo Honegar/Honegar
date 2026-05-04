@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "httb92cf4c9cd506122e69b19"
+    url: "httine/s/5969601ac9b92cf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "htt-aab2-b7b503a15e64"
+    url: "htt8997f-aaaf-4c4b-aab2-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,7 @@ proxy-providers:
     proxy: 直连
 
    Airport3:
-    url: "htt78e8eac672026d652584acbdaaf7d"
+    url: "htt1/client/58478e8eac672026d652584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -179,8 +179,8 @@ rules:
   - SRC-PORT,63219,DIRECT
   
   # 2. 自定义业务
-  - DOMAIN-SUFFIX,tailscale.com,DIRECT
   - DOMAIN-KEYWORD,hsbc,DIRECT
+  - DOMAIN-SUFFIX,tailscale.com,DIRECT
   - DOMAIN-KEYWORD,boc,DIRECT
 
   # 3. 分流规则
