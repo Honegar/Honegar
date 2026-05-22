@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "httine/s/5969601ac9b92cf4c9cd506122e69b19"
+    url: "hcf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "htt8997f-aaaf-4c4b-aab2-b7b503a15e64"
+    url: "httpab2-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,7 @@ proxy-providers:
     proxy: 直连
 
    Airport3:
-    url: "htt1/client/58478e8eac672026d652584acbdaaf7d"
+    url: "htt8e8eac672026d652584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -128,13 +128,13 @@ dns:
 
 # ==================== 策略组 ====================
 proxy-groups:
-  - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "(?i)香港|HK|日本|JP|新加坡|SG", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
+  - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "(?i)香港|HK|日本|JP|新加坡|SG", url: "http://cp.cloudflare.com/generate_204", interval: 150, tolerance: 20 }
   - { name: AI-Services, type: select, proxies: [美国-手选, 香港-优选, 新加坡-手选, ⚡️ 自动优选, 所有-手选] }
   - { name: Streaming, type: fallback, interval: 300, proxies: [⚡️ 自动优选, 香港-优选, 台湾-手选, 所有-手选] }
   - { name: Social-Media, type: select, proxies: [香港-优选, 所有-手选] }
   - { name: GitHub, type: select, proxies: [⚡️ 自动优选, 直连] }
   - { name: Apple, type: select, proxies: [直连, ⚡️ 自动优选] }
-  - { name: Game, type: select, proxies: [直连, ⚡️ 自动优选] }
+  - { name: Game, type: select, proxies: [直连, ⚡️ 自动优选, 所有-手选] }
   - { name: Google, type: select, proxies: [香港-优选, 所有-手选] }
   - { name: 国外, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选] }
   - { name: 国内, type: select, proxies: [直连, 拒绝] }
@@ -146,6 +146,8 @@ proxy-groups:
   - { name: 新加坡-手选, type: select, include-all: true, filter: "(?i)新加坡|SG|🇸🇬" }
   - { name: 韩国-手选, type: select, include-all: true, filter: "(?i)韩国|韓國|KR|🇰🇷" }
   - { name: 美国-手选, type: select, include-all: true, filter: "(?i)美国|US|🇺🇸" }
+  - { name: 🛑 广告拦截, type: select, proxies: [拒绝, 直连] }
+
 
 # ==================== 规则集 (优化下载逻辑) ====================
 rule-providers:
@@ -169,9 +171,33 @@ rule-providers:
   Google: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/google.mrs", proxy: ⚡️ 自动优选 }
   CN_Site: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/cn.mrs", proxy: ⚡️ 自动优选 }
   CN_IP: { type: http, behavior: ipcidr, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/cn.mrs", proxy: ⚡️ 自动优选 }
+  reject:
+    type: http
+    behavior: domain
+    url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
+    path: ./ruleset/reject.yaml
+    interval: 86400
+
+  privacy:
+    type: http
+    behavior: domain
+    url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/privacy.txt"
+    path: ./ruleset/privacy.yaml
+    interval: 86400
+
+  awavenue_ads:
+    type: http
+    behavior: domain
+    url: "https://raw.githubusercontent.com/TG-AWM/AWAvenue-Ads-Rule/main/Clash/AWAvenue-Ads-Rule-Clash.yaml"
+    path: ./ruleset/awavenue_ads.yaml
+    interval: 86400
 
 # ==================== 规则 ====================
 rules:
+
+  - RULE-SET,reject,🛑 广告拦截
+  - RULE-SET,privacy,🛑 广告拦截
+  - RULE-SET,awavenue_ads,🛑 广告拦截
   # 1. 基础网络与直连保护
   - GEOIP,lan,DIRECT,no-resolve
   - GEOSITE,private,DIRECT
