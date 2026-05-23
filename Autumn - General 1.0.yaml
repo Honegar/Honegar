@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "hcf4c9cd506122e69b19"
+    url: "htt2cf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "httpab2-b7b503a15e64"
+    url: "http-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,7 @@ proxy-providers:
     proxy: 直连
 
    Airport3:
-    url: "htt8e8eac672026d652584acbdaaf7d"
+    url: "http026d652584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -129,75 +129,48 @@ dns:
 # ==================== 策略组 ====================
 proxy-groups:
   - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "(?i)香港|HK|日本|JP|新加坡|SG", url: "http://cp.cloudflare.com/generate_204", interval: 150, tolerance: 20 }
-  - { name: AI-Services, type: select, proxies: [美国-手选, 香港-优选, 新加坡-手选, ⚡️ 自动优选, 所有-手选] }
-  - { name: Streaming, type: fallback, interval: 300, proxies: [⚡️ 自动优选, 香港-优选, 台湾-手选, 所有-手选] }
-  - { name: Social-Media, type: select, proxies: [香港-优选, 所有-手选] }
+  - { name: Streaming, type: fallback, interval: 300, proxies: [香港-优选,所有-手选] }
+  - { name: Social-Media, type: select, proxies: [香港-优选] }
   - { name: GitHub, type: select, proxies: [⚡️ 自动优选, 直连] }
   - { name: Apple, type: select, proxies: [直连, ⚡️ 自动优选] }
   - { name: Game, type: select, proxies: [直连, ⚡️ 自动优选, 所有-手选] }
-  - { name: Google, type: select, proxies: [香港-优选, 所有-手选] }
+  - { name: Google, type: select, proxies: [美国-手选,香港-优选, 所有-手选] }
   - { name: 国外, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选] }
   - { name: 国内, type: select, proxies: [直连, 拒绝] }
-  - { name: 其他, type: select, proxies: [⚡️ 自动优选, 所有-手选, 直连] }
+  - { name: 其他, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选, 直连] }
   - { name: 所有-手选, type: select, include-all: true, filter: "^((?!(直连|拒绝)).)*$" }
-  - { name: 香港-优选, type: url-test, include-all: true, filter: "(?i)香港|HK", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
+  - { name: 香港-优选, type: url-test, include-all: true, filter: "(?i)香港|HK", url: "http://cp.cloudflare.com/generate_204", interval: 150, tolerance: 20 }
   - { name: 台湾-手选, type: select, include-all: true, filter: "(?i)台湾|台灣|TW|Tai Wan|🇹🇼" }
   - { name: 日本-手选, type: select, include-all: true, filter: "(?i)日本|JP|🇯🇵" }
   - { name: 新加坡-手选, type: select, include-all: true, filter: "(?i)新加坡|SG|🇸🇬" }
   - { name: 韩国-手选, type: select, include-all: true, filter: "(?i)韩国|韓國|KR|🇰🇷" }
   - { name: 美国-手选, type: select, include-all: true, filter: "(?i)美国|US|🇺🇸" }
-  - { name: 🛑 广告拦截, type: select, proxies: [拒绝, 直连] }
 
 
 # ==================== 规则集 (优化下载逻辑) ====================
 rule-providers:
-  AI: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/openai.mrs", proxy: ⚡️ 自动优选 }
-  Claude: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/claude.mrs", proxy: ⚡️ 自动优选 }
-  # 修正了 Gemini 的 URL 路径
   Microsoft: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/microsoft.mrs", proxy: ⚡️ 自动优选 }
-  Epic: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Epic/Epic.list", proxy: ⚡️ 自动优选 }
-  Steam: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/steam.mrs", proxy: ⚡️ 自动优选 }
-  EA: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/EA/EA.list", proxy: ⚡️ 自动优选 }
-  UBI: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/UBI/UBI.list", proxy: ⚡️ 自动优选 }
-  Gemini: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/gemini.mrs", proxy: ⚡️ 自动优选 }
   Telegram: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/telegram.mrs", proxy: ⚡️ 自动优选 }
-  Streaming: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/netflix.mrs", proxy: ⚡️ 自动优选 }
+  Telegram / IP: {type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geoip/telegram.mrs", proxy: ⚡️ 自动优选}
   Youtube: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/youtube.mrs", proxy: ⚡️ 自动优选 }
-  Disney: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/disney.mrs", proxy: ⚡️ 自动优选 }
-  Spotify: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/spotify.mrs", proxy: ⚡️ 自动优选 }
-  Social: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/facebook.mrs", proxy: ⚡️ 自动优选 }
+  netflix: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/netflix.mrs", proxy: ⚡️ 自动优选 }
   GitHub: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/github.mrs", proxy: ⚡️ 自动优选 }
   Apple: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/apple.mrs", proxy: ⚡️ 自动优选 }
   Google: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/google.mrs", proxy: ⚡️ 自动优选 }
   CN_Site: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/cn.mrs", proxy: ⚡️ 自动优选 }
   CN_IP: { type: http, behavior: ipcidr, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/cn.mrs", proxy: ⚡️ 自动优选 }
-  reject:
-    type: http
-    behavior: domain
-    url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
-    path: ./ruleset/reject.yaml
-    interval: 86400
+  AWAvenue-Ads-Rule: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.mrs", proxy: ⚡️ 自动优选 }
+  category-games: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-games.mrs", proxy: ⚡️ 自动优选 }
+  games-cn: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs", proxy: ⚡️ 自动优选 }
 
-  privacy:
-    type: http
-    behavior: domain
-    url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/privacy.txt"
-    path: ./ruleset/privacy.yaml
-    interval: 86400
-
-  awavenue_ads:
-    type: http
-    behavior: domain
-    url: "https://raw.githubusercontent.com/TG-AWM/AWAvenue-Ads-Rule/main/Clash/AWAvenue-Ads-Rule-Clash.yaml"
-    path: ./ruleset/awavenue_ads.yaml
-    interval: 86400
 
 # ==================== 规则 ====================
 rules:
 
-  - RULE-SET,reject,🛑 广告拦截
-  - RULE-SET,privacy,🛑 广告拦截
-  - RULE-SET,awavenue_ads,🛑 广告拦截
+  - RULE-SET,AWAvenue-Ads-Rule,REJECT
+  - RULE-SET,category-games,Game
+  - RULE-SET,games-cn,DIRECT
+
   # 1. 基础网络与直连保护
   - GEOIP,lan,DIRECT,no-resolve
   - GEOSITE,private,DIRECT
@@ -210,22 +183,14 @@ rules:
   - DOMAIN-KEYWORD,boc,DIRECT
 
   # 3. 分流规则
-  - RULE-SET,AI,AI-Services
-  - RULE-SET,Claude,AI-Services
-  - RULE-SET,Gemini,AI-Services
-  - RULE-SET,Streaming,Streaming
+
+  - RULE-SET,Telegram / IP,Social-Media
   - RULE-SET,Youtube,Streaming
-  - RULE-SET,Disney,Streaming
-  - RULE-SET,Spotify,Streaming
+  - RULE-SET,netflix,Streaming
   - RULE-SET,Telegram,Social-Media
-  - RULE-SET,Social,Social-Media
   - RULE-SET,GitHub,GitHub
   - RULE-SET,Apple,Apple
   - RULE-SET,Microsoft,Game
-  - RULE-SET,Epic,Game
-  - RULE-SET,Steam,Game
-  - RULE-SET,EA,Game
-  - RULE-SET,UBI,Game
   - RULE-SET,Google,Google
   
   # 4. 国内流量
