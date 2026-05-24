@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "httcf4c9cd506122e69b19"
+    url: "httf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "htb503a15e64"
+    url: "htt-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,7 @@ proxy-providers:
     proxy: 直连
 
    Airport3:
-    url: "http2584acbdaaf7d"
+    url: "http6d652584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -74,19 +74,14 @@ sniffer:
   enable: true
   override-destination: true
   sniff:
-    HTTP:
-      ports: [80, 8080, 8880] # 缩小了范围，只保留最常用的 HTTP 变体端口，暴减 CPU 占用
-    TLS:
-      ports: [443, 8443]
-    QUIC:
-      ports: [443, 8443]
-  force-domain:
-    - "*.v2ex.com"            # 规范化通配符写法
+    HTTP: { ports: [80] }
+    TLS: { ports: [443] }
+    QUIC: { ports: [443] }
   skip-domain:
-    - "*.mi.com"              # 一句话拉黑小米/米家所有后台连接，防止嗅探导致的智能家居掉线
+    - "+.mi.com"    # 使用 + 代替 *，Clash 规范中通常使用 + 匹配子域名
+    - "+.apple.com"
+    - "+.baidu.com"
     - "dlg.io.mi.com"
-    - "*.apple.com"           # 苹果服务极易因嗅探导致证书握手失败，规范化跳过
-    - "*.baidu.com"
 
 tun:
   enable: true
@@ -111,59 +106,26 @@ dns:
   ipv6: false
   respect-rules: true
   enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16
+  fake-ip-range: 198.18.0.1/16 # 建议使用保留网段，更为稳妥
+  fake-ip-filter-mode: blacklist
   fake-ip-filter:
-  # === 1. 基础本地/私有/连通性（保留并精简） ===
-  - "*.lan"
-  - "*.local"
-  - "*.home"
-  - "localhost.ptlogin2.qq.com"
-  - "geosite:private"
-  - "geosite:connectivity-check" # 已经包含了 msftconnecttest 和 msftncsi，故删去后两者
-
-  # === 2. STUN / TURN / 语音（修补层级漏洞） ===
-  - "stun.*"
-  - "stun.*.*"
-  - "stun.*.*.*"
-  - "stun.*.*.*.*"
-  - "stun.*.*.*.*.*" # 补齐多层级，去掉开头的“+.”（因为stun通常是三级域名的开头）
-  - "+.turn.*"
-  - "+.voip.*"
-  - "+.rtc.*"
-
-  # === 3. 大陆常用服务（降维打击：用规则集代替手写） ===
-  - "geosite:cn"                 # 【核心优化】直接平替腾讯、网易、米哈游、支付宝、所有国内银行
-  
-  # 用于解析 DNS 服务器自身的域名
+    - "*.lan"
+    - "*.local"
+    - "*.home.arpa"
+    - "*.msftconnecttest.com"
+    - "*.msftncsi.com"
+    - "time.*.com"
+    - "router.asus.com"
   default-nameserver:
     - 223.5.5.5
-    - 119.29.29.29
-    
-  # 用于解析代理节点的域名（全部换成国内高并发，防止直连海外 DoH 失败导致节点失联）
   proxy-server-nameserver:
+    - 119.29.29.29
+  # namesever尽量用运营商提供的DNS
+  nameserver:
+    - 114.114.114.114
     - 223.5.5.5
     - 119.29.29.29
 
-  # 精确分流策略
-  nameserver-policy:
-    "geosite:private": [223.5.5.5, 119.29.29.29]
-    "geosite:cn": [223.5.5.5, 119.29.29.29]
-    "geosite:apple": [223.5.5.5, 119.29.29.29]
-    "geosite:category-ads-all": rcode://success
-    "geosite:geolocation-!cn": [https://dns.cloudflare.com/dns-query, https://dns.google/dns-query]
-
-  # 兜底 DNS
-  nameserver:
-    - https://dns.cloudflare.com/dns-query
-    - https://dns.google/dns-query
-    - 223.5.5.5 # 增加国内 DNS 兜底：万一网络波动海外 DoH 握手失败，国内 DNS 能快速响应，防止网页彻底打不开
-
-  # 降级过滤（配合 nameserver 里的国内 DNS 使用，防止未命中 policy 的国外域名被国内 DNS 污染）
-  fallback-filter:
-    geoip: true
-    geoip-code: CN
-    ipcidr:
-      - 240.0.0.0/4
 
 # ==================== 策略组 ====================
 proxy-groups:
