@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "htt9b92cf4c9cd506122e69b19"
+    url: "506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "httpab2-b7b503a15e64"
+    url: "htb2-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,7 @@ proxy-providers:
     proxy: 直连
 
    Airport3:
-    url: "htt72026d652584acbdaaf7d"
+    url: "htt026d652584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -104,55 +104,49 @@ tun:
   dns-hijack:
     - "any:53"
 
-# ==================== DNS 模块 ====================
 dns:
   enable: true
   listen: 0.0.0.0:1053
   ipv6: false
-  
-  # Fake-IP 模式下设为 false，提升首次握手和网页秒开体验
-  respect-rules: false
+  respect-rules: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
-
-  # 过滤名单：精简掉大体量的 geosite:cn，保留关键的游戏、系统联动和本地局域网
   fake-ip-filter:
     - "*.lan"
     - "*.local"
-    - "localhost.ptlogin2.qq.com" # 解决腾讯系登录慢
-    - "+.srv.nintendo.net"        # 任天堂服务
-    - "+.stun.playstation.net"    # PS 联机
-    - "+.msftconnecttest.com"     # Windows 联网检测
+    - "localhost.ptlogin2.qq.com"
+    - "+.stun.*.*"
+    - "+.msftconnecttest.com"
     - "+.msftncsi.com"
-    - "rule-providers"
-
-  # 1. 用于解析 DNS 服务器域名的本地常规 DNS
+    - "geosite:private"
+  
+  # 用于解析 DNS 服务器自身的域名（如 dns.alidns.com）
   default-nameserver:
     - 223.5.5.5
     - 119.29.29.29
-
-  # 2. 用于解析代理服务器（节点域名）的 DNS，统一走国内 DoH 
+    - 1.1.1.1
+    
+  # 用于解析代理节点的域名，国内+国外并发，确保节点域名百分百解析成功
   proxy-server-nameserver:
     - https://dns.alidns.com/dns-query
-    - https://doh.pub/dns-query
+    - 223.5.5.5
+    - https://dns.cloudflare.com/dns-query # 新增：防止节点域名被国内污染
 
-  # 3. 策略分流：精确控制不同域名的解析去向
+  # 精确分流策略：匹配到的走专属 DNS，不盲目并发
   nameserver-policy:
-    # 拆开书写，确保国内和苹果域名使用最快的国内 DNS 解析真实 IP
-    "geosite:cn": [https://dns.alidns.com/dns-query, 223.5.5.5]
-    "geosite:apple": [https://dns.alidns.com/dns-query, 223.5.5.5]
-    
-    # 现代内核广告屏蔽终极写法：直接返回域名不存在(NXDOMAIN)，不产生无效流量
-    "geosite:category-ads-all": rcode://name_error
-    
-    # 非中国大陆网站，强制使用国外安全 DoH 查询（防污染）
+    "geosite:private": [223.5.5.5, 119.29.29.29]
+    "geosite:cn": [223.5.5.5, 119.29.29.29]
+    "geosite:apple": [223.5.5.5, 119.29.29.29]
+    "geosite:category-ads-all": rcode://success
     "geosite:geolocation-!cn": [https://dns.cloudflare.com/dns-query, https://dns.google/dns-query]
 
-  # 4. 默认兜底 DNS：只放国内高质量 DoH。
-  # 未匹配到 policy 的国外域名会直接秒回 Fake-IP，真正连接时会走上面的 geolocation-!cn 进行代理内解析
+  # 兜底 DNS：当上面的 policy 全都没匹配到时，才会使用这里的 DNS
+  # 既然没命中国内和广告，默认大概率是国外域名，所以直接用国外加密 DNS 兜底，速度最快且防污染
   nameserver:
-    - https://dns.alidns.com/dns-query
-    - https://doh.pub/dns-query
+    - https://dns.cloudflare.com/dns-query
+    - https://dns.google/dns-query
+
+  # 删除了 fallback 和 fallback-filter
 
 # ==================== 策略组 ====================
 proxy-groups:
