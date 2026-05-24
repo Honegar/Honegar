@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "506122e69b19"
+    url: "httcf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "htb2-b7b503a15e64"
+    url: "htb503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,7 @@ proxy-providers:
     proxy: 直连
 
    Airport3:
-    url: "htt026d652584acbdaaf7d"
+    url: "http2584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -104,6 +104,7 @@ tun:
   dns-hijack:
     - "any:53"
 
+#DNS模块
 dns:
   enable: true
   listen: 0.0.0.0:1053
@@ -112,27 +113,38 @@ dns:
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter:
-    - "*.lan"
-    - "*.local"
-    - "localhost.ptlogin2.qq.com"
-    - "+.stun.*.*"
-    - "+.msftconnecttest.com"
-    - "+.msftncsi.com"
-    - "geosite:private"
+  # === 1. 基础本地/私有/连通性（保留并精简） ===
+  - "*.lan"
+  - "*.local"
+  - "*.home"
+  - "localhost.ptlogin2.qq.com"
+  - "geosite:private"
+  - "geosite:connectivity-check" # 已经包含了 msftconnecttest 和 msftncsi，故删去后两者
+
+  # === 2. STUN / TURN / 语音（修补层级漏洞） ===
+  - "stun.*"
+  - "stun.*.*"
+  - "stun.*.*.*"
+  - "stun.*.*.*.*"
+  - "stun.*.*.*.*.*" # 补齐多层级，去掉开头的“+.”（因为stun通常是三级域名的开头）
+  - "+.turn.*"
+  - "+.voip.*"
+  - "+.rtc.*"
+
+  # === 3. 大陆常用服务（降维打击：用规则集代替手写） ===
+  - "geosite:cn"                 # 【核心优化】直接平替腾讯、网易、米哈游、支付宝、所有国内银行
   
-  # 用于解析 DNS 服务器自身的域名（如 dns.alidns.com）
+  # 用于解析 DNS 服务器自身的域名
   default-nameserver:
     - 223.5.5.5
     - 119.29.29.29
-    - 1.1.1.1
     
-  # 用于解析代理节点的域名，国内+国外并发，确保节点域名百分百解析成功
+  # 用于解析代理节点的域名（全部换成国内高并发，防止直连海外 DoH 失败导致节点失联）
   proxy-server-nameserver:
-    - https://dns.alidns.com/dns-query
     - 223.5.5.5
-    - https://dns.cloudflare.com/dns-query # 新增：防止节点域名被国内污染
+    - 119.29.29.29
 
-  # 精确分流策略：匹配到的走专属 DNS，不盲目并发
+  # 精确分流策略
   nameserver-policy:
     "geosite:private": [223.5.5.5, 119.29.29.29]
     "geosite:cn": [223.5.5.5, 119.29.29.29]
@@ -140,13 +152,18 @@ dns:
     "geosite:category-ads-all": rcode://success
     "geosite:geolocation-!cn": [https://dns.cloudflare.com/dns-query, https://dns.google/dns-query]
 
-  # 兜底 DNS：当上面的 policy 全都没匹配到时，才会使用这里的 DNS
-  # 既然没命中国内和广告，默认大概率是国外域名，所以直接用国外加密 DNS 兜底，速度最快且防污染
+  # 兜底 DNS
   nameserver:
     - https://dns.cloudflare.com/dns-query
     - https://dns.google/dns-query
+    - 223.5.5.5 # 增加国内 DNS 兜底：万一网络波动海外 DoH 握手失败，国内 DNS 能快速响应，防止网页彻底打不开
 
-  # 删除了 fallback 和 fallback-filter
+  # 降级过滤（配合 nameserver 里的国内 DNS 使用，防止未命中 policy 的国外域名被国内 DNS 污染）
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 240.0.0.0/4
 
 # ==================== 策略组 ====================
 proxy-groups:
