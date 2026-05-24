@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "htt2cf4c9cd506122e69b19"
+    url: "htt9b92cf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "http-b7b503a15e64"
+    url: "httpab2-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,7 @@ proxy-providers:
     proxy: 直连
 
    Airport3:
-    url: "http026d652584acbdaaf7d"
+    url: "htt72026d652584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -35,6 +35,7 @@ proxy-providers:
 proxies:
     - {name: 直连, type: direct}
     - {name: 拒绝, type: reject}
+
 # ==================== 全局配置 ====================
 port: 7890
 socks-port: 7891
@@ -43,15 +44,22 @@ mixed-port: 7893
 tproxy-port: 7894
 allow-lan: true
 bind-address: "*"
+
+# IPv6 彻底关闭策略
 ipv6: false
-unified-delay: true
-tcp-concurrent: true
-# 进阶性能优化
-tcp-fast-open: true
+prefer-ipv6: false
+
+# 进阶性能与连接优化
 log-level: warning
 find-process-mode: 'off'
+tcp-concurrent: true
+tcp-fast-open: true
+
+# 客户端指纹混淆
 global-client-fingerprint: chrome
-keep-alive-idle: 600
+
+# 连接保活优化（释放死连接，减轻系统负担）
+keep-alive-idle: 300
 keep-alive-interval: 15
 
 # ==================== 控制面板 ====================
@@ -64,67 +72,87 @@ external-ui-url: "https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-p
 # ==================== 嗅探与入站 ====================
 sniffer:
   enable: true
+  override-destination: true
   sniff:
     HTTP:
-      ports: [80, 8080-8880]
-      override-destination: true
+      ports: [80, 8080, 8880] # 缩小了范围，只保留最常用的 HTTP 变体端口，暴减 CPU 占用
     TLS:
       ports: [443, 8443]
     QUIC:
       ports: [443, 8443]
   force-domain:
-    - "+.v2ex.com"
+    - "*.v2ex.com"            # 规范化通配符写法
   skip-domain:
-    - "Mijia Cloud"
+    - "*.mi.com"              # 一句话拉黑小米/米家所有后台连接，防止嗅探导致的智能家居掉线
     - "dlg.io.mi.com"
-    - "+.apple.com"
-    - "+.baidu.com"
+    - "*.apple.com"           # 苹果服务极易因嗅探导致证书握手失败，规范化跳过
+    - "*.baidu.com"
 
 tun:
   enable: true
-  stack: mixed
-  dns-hijack: ["any:53", "tcp://any:53"]
+  # 1. 将协议栈从混杂模式改为 gvisor，大幅提升 UDP 游戏分流和网络稳定性
+  stack: gvisor
+  
+  # 2. 保持双开启，作为 Linux 防火墙（nftables）自动接管三层流量的核心开关（不可关闭，否则断网）
   auto-route: true
   auto-redirect: true
+  
+  # 3. 彻底关闭自动检测出口！防止软路由内部网卡过多导致“流量回环死循环”断网
   auto-detect-interface: true
+  
+  # 4. 精简 DNS 劫持范围，any:53 默认已包含 UDP 和 TCP，无需重复写入
+  dns-hijack:
+    - "any:53"
 
-# DNS模块
+# ==================== DNS 模块 ====================
 dns:
   enable: true
   listen: 0.0.0.0:1053
   ipv6: false
-  respect-rules: true
+  
+  # Fake-IP 模式下设为 false，提升首次握手和网页秒开体验
+  respect-rules: false
   enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16 # 修正为标准保留段  # 扩展过滤名单，确保兼容性
+  fake-ip-range: 198.18.0.1/16
+
+  # 过滤名单：精简掉大体量的 geosite:cn，保留关键的游戏、系统联动和本地局域网
   fake-ip-filter:
     - "*.lan"
     - "*.local"
     - "localhost.ptlogin2.qq.com" # 解决腾讯系登录慢
-    - "+.srv.nintendo.net" # 任天堂服务
-    - "+.stun.playstation.net" # PS 联机
-    - "+.msftconnecttest.com" # Windows 联网检测
+    - "+.srv.nintendo.net"        # 任天堂服务
+    - "+.stun.playstation.net"    # PS 联机
+    - "+.msftconnecttest.com"     # Windows 联网检测
     - "+.msftncsi.com"
     - "rule-providers"
-    - "geosite:cn"
-    - "geosite:apple"
-    - "geosite:category-ads-all"
-    - "xmcdn.com"
-    - "*.ximalaya.com"  # 用于解析 DNS 服务器域名的本地 DNS
+
+  # 1. 用于解析 DNS 服务器域名的本地常规 DNS
   default-nameserver:
     - 223.5.5.5
-    - 119.29.29.29  # 用于解析代理服务器地址
+    - 119.29.29.29
+
+  # 2. 用于解析代理服务器（节点域名）的 DNS，统一走国内 DoH 
   proxy-server-nameserver:
     - https://dns.alidns.com/dns-query
-    - 223.5.5.5  # 策略分流：特定域名强制使用特定 DNS
+    - https://doh.pub/dns-query
+
+  # 3. 策略分流：精确控制不同域名的解析去向
   nameserver-policy:
-    "geosite:cn,apple": [223.5.5.5, 119.29.29.29]
-    "geosite:category-ads-all": "127.0.0.1" # 广告屏蔽，直接指向空
-    "geosite:geolocation-!cn": [https://dns.cloudflare.com/dns-query, https://dns.google/dns-query]  # 默认 DNS (处理未匹配到 policy 的请求)
+    # 拆开书写，确保国内和苹果域名使用最快的国内 DNS 解析真实 IP
+    "geosite:cn": [https://dns.alidns.com/dns-query, 223.5.5.5]
+    "geosite:apple": [https://dns.alidns.com/dns-query, 223.5.5.5]
+    
+    # 现代内核广告屏蔽终极写法：直接返回域名不存在(NXDOMAIN)，不产生无效流量
+    "geosite:category-ads-all": rcode://name_error
+    
+    # 非中国大陆网站，强制使用国外安全 DoH 查询（防污染）
+    "geosite:geolocation-!cn": [https://dns.cloudflare.com/dns-query, https://dns.google/dns-query]
+
+  # 4. 默认兜底 DNS：只放国内高质量 DoH。
+  # 未匹配到 policy 的国外域名会直接秒回 Fake-IP，真正连接时会走上面的 geolocation-!cn 进行代理内解析
   nameserver:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
-    - https://dns.cloudflare.com/dns-query # 建议增加国外 DoH
-    - https://dns.google/dns-query
 
 # ==================== 策略组 ====================
 proxy-groups:
