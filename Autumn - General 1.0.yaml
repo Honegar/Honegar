@@ -129,7 +129,7 @@ dns:
 
 # ==================== 策略组 ====================
 proxy-groups:
-  - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "(?i)香港|HK|日本|JP|新加坡|SG", url: "http://cp.cloudflare.com/generate_204", interval: 150, tolerance: 20 }
+  - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "(?i)香港|HK|日本|JP|新加坡|SG", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
   - { name: Streaming, type: fallback, interval: 300, proxies: [香港-优选,所有-手选] }
   - { name: Social-Media, type: select, proxies: [香港-优选] }
   - { name: GitHub, type: select, proxies: [⚡️ 自动优选, 直连] }
@@ -140,7 +140,7 @@ proxy-groups:
   - { name: 国内, type: select, proxies: [直连, 拒绝] }
   - { name: 其他, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选, 直连] }
   - { name: 所有-手选, type: select, include-all: true, filter: "^((?!(直连|拒绝)).)*$" }
-  - { name: 香港-优选, type: url-test, include-all: true, filter: "(?i)香港|HK", url: "http://cp.cloudflare.com/generate_204", interval: 150, tolerance: 20 }
+  - { name: 香港-优选, type: url-test, include-all: true, filter: "(?i)香港|HK", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
   - { name: 台湾-手选, type: select, include-all: true, filter: "(?i)台湾|台灣|TW|Tai Wan|🇹🇼" }
   - { name: 日本-手选, type: select, include-all: true, filter: "(?i)日本|JP|🇯🇵" }
   - { name: 新加坡-手选, type: select, include-all: true, filter: "(?i)新加坡|SG|🇸🇬" }
