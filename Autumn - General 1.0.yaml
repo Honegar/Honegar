@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "httf4c9cd506122e69b19"
+    url: "htt1ac9b92cf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "htt-b7b503a15e64"
+    url: "httpc4b-aab2-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,7 @@ proxy-providers:
     proxy: 直连
 
    Airport3:
-    url: "http6d652584acbdaaf7d"
+    url: "http8e8eac672026d652584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -63,7 +63,7 @@ keep-alive-idle: 300
 keep-alive-interval: 15
 
 # ==================== 控制面板 ====================
-external-controller: 192.168.88.1:9090
+external-controller: 192.168.88.2:9090
 secret: "2238"
 external-ui: "/etc/nikki/run"
 external-ui-name: zashboard
@@ -74,59 +74,80 @@ sniffer:
   enable: true
   override-destination: true
   sniff:
-    HTTP: { ports: [80] }
-    TLS: { ports: [443] }
-    QUIC: { ports: [443] }
+    HTTP:
+      ports: [80]
+    TLS:
+      ports: [443]
+    # 如果不需要对 HTTP3/QUIC 进行域名还原，建议直接删掉 QUIC 这一行，降低 UDP 状态追溯的开销
   skip-domain:
-    - "+.mi.com"    # 使用 + 代替 *，Clash 规范中通常使用 + 匹配子域名
+    - "+.mi.com"     # 已包含 dlg.io.mi.com，删除了下方的冗余项
     - "+.apple.com"
     - "+.baidu.com"
-    - "dlg.io.mi.com"
 
 tun:
   enable: true
-  # 1. 将协议栈从混杂模式改为 gvisor，大幅提升 UDP 游戏分流和网络稳定性
+  
+  # 1. 使用 gvisor 协议栈，提供极佳的 UDP 稳定性和安全隔离
   stack: gvisor
   
-  # 2. 保持双开启，作为 Linux 防火墙（nftables）自动接管三层流量的核心开关（不可关闭，否则断网）
+  # 2. 仅保留自动路由接管，精简 nftables 防火墙规则，避免重复重定向
   auto-route: true
   auto-redirect: true
   
-  # 3. 彻底关闭自动检测出口！防止软路由内部网卡过多导致“流量回环死循环”断网
+  # 3. 真正关闭自动检测出口，显式指定物理 WAN 口，彻底杜绝虚拟网卡过多导致的回环死循环
   auto-detect-interface: true
-  
-  # 4. 精简 DNS 劫持范围，any:53 默认已包含 UDP 和 TCP，无需重复写入
+  gateway: 192.168.88.1       # 填入你上级网关或主路由的 IP（若是主路由则可不填）
+  # interface-name: eth0     # 强烈建议显式指定你的外网网卡名称（如 eth0, pppoe-wan）
+
+  # 4. 精简 DNS 劫持范围
   dns-hijack:
     - "any:53"
+    
+  # 5. 性能进阶优化：开启 GSO 硬件卸载，提升吞吐并降低高并发下的 CPU 负载
+  gso: true
+  # mtu: 1500                # 常规环境保持 1500，若全链路支持巨型帧可设为 9000
 
-#DNS模块
+# DNS模块 终极性能优化版
 dns:
   enable: true
   listen: 0.0.0.0:1053
   ipv6: false
-  respect-rules: true
+  respect-rules: true      
+  use-system-hosts: true
+  use-hosts: true                    
+  cache-algorithm: arc               
+  prefer-h3: true
   enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16 # 建议使用保留网段，更为稳妥
+  fake-ip-range: 198.18.0.1/16
   fake-ip-filter-mode: blacklist
+  
+  # 极致精简的 fake-ip-filter：只放【必须拿到真实IP】的系统服务
   fake-ip-filter:
-    - "*.lan"
-    - "*.local"
-    - "*.home.arpa"
-    - "*.msftconnecttest.com"
-    - "*.msftncsi.com"
+    - +.lan
+    - +.local
+    - "+.msftconnecttest.com"
+    - "+.msftncsi.com"
     - "time.*.com"
-    - "router.asus.com"
+
+  # 1. 基础 Bootstrap：只给 DoH 域名引路
   default-nameserver:
     - 223.5.5.5
-  proxy-server-nameserver:
-    - 119.29.29.29
-  # namesever尽量用运营商提供的DNS
+
+  # 2. 纯净兜底：没有命中 policy 规则的才走这里（纯国内/未知）
   nameserver:
-    - 114.114.114.114
+    - https://dns.alidns.com/dns-query#h3=true
     - 223.5.5.5
     - 119.29.29.29
 
+  # 3. 节点解析升级：使用 H3 的阿里 DoH 替代纯 UDP，防止运营商对 53 端口的干扰
+  proxy-server-nameserver:
+    - https://dns.alidns.com/dns-query#h3=true
+    - 223.5.5.5
+    - 119.29.29.29
 
+  # 5. 隐藏的高性能开关
+  fast-resolve: true          # 激进的并发加速（谁快用谁）
+  
 # ==================== 策略组 ====================
 proxy-groups:
   - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "(?i)香港|HK|日本|JP|新加坡|SG", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 50 }
@@ -135,7 +156,7 @@ proxy-groups:
   - { name: GitHub, type: select, proxies: [⚡️ 自动优选, 直连] }
   - { name: Apple, type: select, proxies: [直连, ⚡️ 自动优选] }
   - { name: Game, type: select, proxies: [直连, ⚡️ 自动优选, 所有-手选] }
-  - { name: Google, type: select, proxies: [美国-手选,香港-优选, 所有-手选] }
+  - { name: Google, type: select, proxies: [美国-优选,香港-优选, 所有-手选] }
   - { name: 国外, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选] }
   - { name: 国内, type: select, proxies: [直连, 拒绝] }
   - { name: 其他, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选, 直连] }
@@ -145,7 +166,7 @@ proxy-groups:
   - { name: 日本-手选, type: select, include-all: true, filter: "(?i)日本|JP|🇯🇵" }
   - { name: 新加坡-手选, type: select, include-all: true, filter: "(?i)新加坡|SG|🇸🇬" }
   - { name: 韩国-手选, type: select, include-all: true, filter: "(?i)韩国|韓國|KR|🇰🇷" }
-  - { name: 美国-手选, type: select, include-all: true, filter: "(?i)美国|US|🇺🇸" }
+  - { name: 美国-优选, type: fallback, include-all: true, filter: "(?i)(?!.*(全网优化|硅谷))(美国|US|🇺🇸)", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 50 }
 
 
 # ==================== 规则集 (优化下载逻辑) ====================
