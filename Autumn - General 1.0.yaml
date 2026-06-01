@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "httc9cd506122e69b19"
+    url: "http4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "httb-aab2-b7b503a15e64"
+    url: "httpab2-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,7 @@ proxy-providers:
     proxy: 直连
 
    Airport3:
-    url: "httpac672026d652584acbdaaf7d"
+    url: "http2026d652584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -136,7 +136,6 @@ dns:
   # 2. 纯净兜底：没有命中 policy 规则的才走这里（纯国内/未知）
   nameserver:
     - https://dns.alidns.com/dns-query#h3=true
-    - 223.5.5.5
     - 119.29.29.29
 
   # 3. 节点解析升级：使用 H3 的阿里 DoH 替代纯 UDP，防止运营商对 53 端口的干扰
