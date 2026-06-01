@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "htt1ac9b92cf4c9cd506122e69b19"
+    url: "httc9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "httpc4b-aab2-b7b503a15e64"
+    url: "httb-aab2-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,7 @@ proxy-providers:
     proxy: 直连
 
    Airport3:
-    url: "http8e8eac672026d652584acbdaaf7d"
+    url: "httpac672026d652584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -166,7 +166,7 @@ proxy-groups:
   - { name: 日本-手选, type: select, include-all: true, filter: "(?i)日本|JP|🇯🇵" }
   - { name: 新加坡-手选, type: select, include-all: true, filter: "(?i)新加坡|SG|🇸🇬" }
   - { name: 韩国-手选, type: select, include-all: true, filter: "(?i)韩国|韓國|KR|🇰🇷" }
-  - { name: 美国-优选, type: fallback, include-all: true, filter: "(?i)(?!.*(全网优化|硅谷))(美国|US|🇺🇸)", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 50 }
+  - { name: 美国-优选, type: fallback, include-all: true, filter: "(?i)(?!.*(全网优化))(美国|US|🇺🇸)", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 50 }
 
 
 # ==================== 规则集 (优化下载逻辑) ====================
