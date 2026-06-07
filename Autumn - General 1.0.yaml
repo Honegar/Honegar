@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "http4c9cd506122e69b19"
+    url: "httpsc9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "httpab2-b7b503a15e64"
+    url: "httpb503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,7 @@ proxy-providers:
     proxy: 直连
 
    Airport3:
-    url: "http2026d652584acbdaaf7d"
+    url: "http72026d652584acbdaaf7d"
     type: http
     interval: 86400
     health-check:
@@ -202,6 +202,9 @@ rules:
   - DOMAIN-KEYWORD,hsbc,DIRECT
   - DOMAIN-SUFFIX,tailscale.com,DIRECT
   - DOMAIN-KEYWORD,boc,DIRECT
+  - DOMAIN-SUFFIX,talkatone.com,美国-优选
+  - DOMAIN-SUFFIX,tktn.at,美国-优选
+  - DOMAIN-SUFFIX,tktn.be,美国-优选
 
   # 3. 分流规则
 
