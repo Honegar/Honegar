@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "htt9b92cf4c9cd506122e69b19"
+    url: "htt1ac9b92cf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "httaab2-b7b503a15e64"
+    url: "htt4b-aab2-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -74,10 +74,8 @@ sniffer:
   force-domain:
     - "+.v2ex.com"
   skip-domain:
-    - "+.mi.com"     # 已包含 dlg.io.mi.com，删除了下方的冗余项
-    - 'local'
-    - '+.local'
-    - '+.lan'
+    - "Mijia Cloud"
+    - "+.push.apple.com"
 
 
 tun:
@@ -95,31 +93,39 @@ dns:
   enable: true
   listen: 0.0.0.0:1053
   ipv6: false
-  respect-rules: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter-mode: blacklist
   fake-ip-ttl: 1
+  respect-rules: true
   fake-ip-filter:
-    - '*.lan'
-    - localhost.ptlogin2.qq.com
-    - +.local
-    - "+.msftconnecttest.com"
-    - "+.msftncsi.com"
-    - "time.*.com"
-
+    - "rule-set:fakeipfilter_domain"
   default-nameserver:
     - 223.5.5.5
-    - 119.29.29.29 
+    - 119.29.29.29
+    - 114.114.114.114
+    - 8.8.8.8
+    - 1.1.1.1
+    - tls://1.12.12.12:853
+    - tls://223.5.5.5:853
+    - system
 
   proxy-server-nameserver:
-    - 119.29.29.29 
     - 223.5.5.5
+    - 119.29.29.29
 
   nameserver:
     - 223.5.5.5
     - 114.114.114.114
     - 119.29.29.29
+
+  nameserver-policy:
+  "rule-set:private_domain,CN_Site":
+    - 223.5.5.5
+    - 119.29.29.29
+  "rule-set:geolocation-!cn":
+    - "https://dns.cloudflare.com/dns-query"
+    - "https://dns.google/dns-query"
   
 # ==================== 策略组 ====================
 proxy-groups:
@@ -130,6 +136,7 @@ proxy-groups:
   - { name: Apple, type: select, proxies: [直连, ⚡️ 自动优选] }
   - { name: Game, type: select, proxies: [直连, ⚡️ 自动优选, 所有-手选] }
   - { name: Google, type: select, proxies: [美国-优选,香港-优选, 所有-手选] }
+  - { name: AI, type: select, proxies: [美国-优选,香港-优选, 所有-手选] }
   - { name: 国外, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选] }
   - { name: 国内, type: select, proxies: [直连, 拒绝] }
   - { name: 其他, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选, 直连] }
@@ -144,6 +151,10 @@ proxy-groups:
 
 # ==================== 规则集 (优化下载逻辑) ====================
 rule-providers:
+  private_ip: {type: http, behavior: ipcidr, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs", proxy: ⚡️ 自动优选}
+  private_domain: { type: http, behavior: domain, format: mrs, interval: 86400,url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs", proxy: ⚡️ 自动优选}
+  geolocation-!cn: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs", proxy: ⚡️ 自动优选}
+  fakeipfilter_domain: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/wwqgtxx/clash-rules/release/fakeip-filter.mrs", proxy: ⚡️ 自动优选}
   Microsoft: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/microsoft.mrs", proxy: ⚡️ 自动优选 }
   Telegram: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/telegram.mrs", proxy: ⚡️ 自动优选 }
   Telegram / IP: {type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geoip/telegram.mrs", proxy: ⚡️ 自动优选}
@@ -156,10 +167,14 @@ rule-providers:
   CN_IP: { type: http, behavior: ipcidr, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/cn.mrs", proxy: ⚡️ 自动优选 }
   category-games: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-games.mrs", proxy: ⚡️ 自动优选 }
   games-cn: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs", proxy: ⚡️ 自动优选 }
-
+  AI: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs" , proxy: ⚡️ 自动优选}
 
 # ==================== 规则 ====================
 rules:
+  - RULE-SET,CN_Site,DIRECT
+  - RULE-SET,CN_IP,DIRECT
+  - RULE-SET,private_ip,DIRECT,no-resolve
+  - RULE-SET,private_domain,DIRECT
   - RULE-SET,category-games,Game
   - RULE-SET,games-cn,DIRECT
 
@@ -180,6 +195,7 @@ rules:
   # 3. 分流规则
 
   - RULE-SET,Telegram / IP,Social-Media
+  - RULE-SET,geolocation-!cn,香港-优选
   - RULE-SET,Youtube,Streaming
   - RULE-SET,netflix,Streaming
   - RULE-SET,Telegram,Social-Media
@@ -187,10 +203,7 @@ rules:
   - RULE-SET,Apple,Apple
   - RULE-SET,Microsoft,Game
   - RULE-SET,Google,Google
-  
-  # 4. 国内流量
-  - RULE-SET,CN_Site,国内
-  - RULE-SET,CN_IP,国内,no-resolve
+  - RULE-SET,AI,AI
   
   # 5. 常见 BT/P2P 端口直连
   - DST-PORT,6881-6889,DIRECT
