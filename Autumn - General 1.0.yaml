@@ -1,8 +1,8 @@
 # 注意规则在满足自己需求情况下，尽量做到精简，不要过度复杂，以免影响性能。
 # 机场订阅
 proxy-providers:
-  Airport1:
-    url: "htt1ac9b92cf4c9cd506122e69b19"
+   Airport1:
+    url: "httcf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -11,8 +11,8 @@ proxy-providers:
       interval: 300
     proxy: 直连
 
-  Airport2:
-    url: "htt4b-aab2-b7b503a15e64"
+   Airport2:
+    url: "http-aab2-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -20,6 +20,7 @@ proxy-providers:
       url: https://www.gstatic.com/generate_204
       interval: 300
     proxy: 直连
+
 
 # 节点信息
 proxies:
@@ -124,7 +125,7 @@ proxy-groups:
   - { name: Apple, type: select, proxies: [直连, ⚡️ 自动优选] }
   - { name: Game, type: select, proxies: [直连, ⚡️ 自动优选, 所有-手选] }
   - { name: Google, type: select, proxies: [香港-优选, 美国-优选, 所有-手选] }
-  - { name: AI, type: select, proxies: [美国-优选, 香港-优选, 所有-手选] }
+  - { name: AI, type: select, proxies: [香港-优选,美国-优选] }
   - { name: 国外, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选] }
   - { name: 国内, type: select, proxies: [直连, 拒绝] }
   - { name: 所有-手选, type: select, include-all: true, filter: "^((?!(直连|拒绝)).)*$" }
@@ -133,7 +134,7 @@ proxy-groups:
   - { name: 日本-手选, type: select, include-all: true, filter: "(?i)日本|JP|🇯🇵" }
   - { name: 新加坡-手选, type: select, include-all: true, filter: "(?i)新加坡|SG|🇸🇬" }
   - { name: 韩国-手选, type: select, include-all: true, filter: "(?i)韩国|韓國|KR|🇰🇷" }
-  - { name: 美国-优选, type: fallback, include-all: true, filter: "(?i)(美国|US|🇺🇸)", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 50 }
+  - { name: 美国-优选, type: select, include-all: true, filter: "(?i)(美国|US|🇺🇸)", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 50 }
 
 # ==================== 规则集 ====================
 rule-providers:
@@ -151,7 +152,8 @@ rule-providers:
   CN_IP: { type: http, behavior: ipcidr, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/cn.mrs", proxy: ⚡️ 自动优选 }
   category-games: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-games.mrs", proxy: ⚡️ 自动优选 }
   games-cn: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs", proxy: ⚡️ 自动优选 }
-  AI: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs" , proxy: ⚡️ 自动优选}
+  Gemini: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google-gemini.mrs" , proxy: ⚡️ 自动优选}
+  OpenAI: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/openai.mrs" , proxy: ⚡️ 自动优选}
 
 # ==================== 规则 (已优化匹配逻辑) ====================
 rules:
@@ -167,9 +169,6 @@ rules:
   - DOMAIN-KEYWORD,hsbc,DIRECT
   - DOMAIN-KEYWORD,boc,DIRECT
   - DOMAIN-SUFFIX,tailscale.com,DIRECT
-  - DOMAIN-SUFFIX,talkatone.com,美国-优选
-  - DOMAIN-SUFFIX,tktn.at,美国-优选
-  - DOMAIN-SUFFIX,tktn.be,美国-优选
 
   # 3. 具体的国外服务分流 (防止被后面的大规则截获)
   - RULE-SET,Telegram_IP,Social-Media
@@ -179,7 +178,8 @@ rules:
   - RULE-SET,GitHub,GitHub
   - RULE-SET,Apple,Apple
   - RULE-SET,Google,Google
-  - RULE-SET,AI,AI
+  - RULE-SET,Gemini,AI
+  - RULE-SET,OpenAI,AI
   
   # 4. 游戏规则
   - RULE-SET,games-cn,DIRECT
