@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "htt9601ac9b92cf4c9cd506122e69b19"
+    url: "ht9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "httpaf-4c4b-aab2-b7b503a15e64"
+    url: "ht-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -179,10 +179,16 @@ rules:
   - DST-PORT,6881-6889,DIRECT   # BT下载直连
   - DST-PORT,22,DIRECT          # SSH直连
 
-  # 2. 自定义高优先级业务
+  # === 香港汇丰银行 (HSBC HK) ===
+  - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
+  - DOMAIN-SUFFIX,hsbc.hk,DIRECT
   - DOMAIN-KEYWORD,hsbc,DIRECT
-  - DOMAIN-KEYWORD,boc,DIRECT
-  - DOMAIN-SUFFIX,tailscale.com,DIRECT
+
+  # === 中银香港 (BOCHK) ===
+  - DOMAIN-SUFFIX,bochk.com,DIRECT
+  - DOMAIN-SUFFIX,boci.com.hk,DIRECT
+  - DOMAIN-SUFFIX,bocgroup.com,DIRECT
+  - DOMAIN-KEYWORD,bochk,DIRECT
 
   # 5. 漏网之鱼处理（全局大规则）
   - RULE-SET,CN_Site,DIRECT
