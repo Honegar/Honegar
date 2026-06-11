@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "ht9cd506122e69b19"
+    url: "ht1ac9b92cf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "ht-b7b503a15e64"
+    url: "httaaaf-4c4b-aab2-b7b503a15e64"
     type: http
     interval: 86400
     health-check:
@@ -158,12 +158,6 @@ rules:
   - GEOIP,lan,DIRECT,no-resolve
   - GEOSITE,private,DIRECT
 
-  # 4. 游戏规则
-  - RULE-SET,games-cn,DIRECT
-  - RULE-SET,category-games,Game
-  - RULE-SET,Microsoft,DIRECT    # 微软建议直连，如需走代理可改为 国外/GitHub
-
-
   # 3. 具体的国外服务分流 (防止被后面的大规则截获)
   - RULE-SET,Telegram_IP,Social-Media
   - RULE-SET,Telegram,Social-Media
@@ -172,8 +166,12 @@ rules:
   - RULE-SET,netflix,Streaming
   - RULE-SET,GitHub,GitHub
   - RULE-SET,Apple,Apple
-  
 
+# 4. 游戏规则
+  - RULE-SET,games-cn,DIRECT
+  - RULE-SET,category-games,Game
+  - RULE-SET,Microsoft,DIRECT    # 微软建议直连，如需走代理可改为 国外/GitHub
+  
   - DST-PORT,63219,DIRECT
   - SRC-PORT,63219,DIRECT
   - DST-PORT,6881-6889,DIRECT   # BT下载直连
