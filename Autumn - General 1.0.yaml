@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "ht1ac9b92cf4c9cd506122e69b19"
+    url: "httform/claGuge"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "httaaaf-4c4b-aab2-b7b503a15e64"
+    url: "httcd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -103,6 +103,7 @@ dns:
     - 223.5.5.5
     - 119.29.29.29
   proxy-server-nameserver:
+    - 114.114.114.114
     - 223.5.5.5
     - 119.29.29.29
   nameserver:
@@ -113,6 +114,7 @@ dns:
       - 223.5.5.5
       - 119.29.29.29
     "rule-set:geolocation-!cn":
+      - 1.1.1.1
       - "https://dns.cloudflare.com/dns-query"
       - "https://dns.google/dns-query"
    
@@ -194,4 +196,4 @@ rules:
   - RULE-SET,geolocation-!cn,国外   # 兜底非中国流量走“国外”策略组而非直接固定香港
   
   # 6. 最终匹配
-  - MATCH,国外
+  - MATCH,香港-优选
