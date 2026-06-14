@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "htuge"
+    url: "httpuge"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "ht69b19"
+    url: "htt69b19"
     type: http
     interval: 86400
     health-check:
@@ -156,14 +156,10 @@ rule-providers:
   YouTube: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.mrs", proxy: ⚡️ 自动优选 }
   anti-ad: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/privacy-protection-tools/anti-ad.github.io/master/docs/mihomo.mrs", proxy: ⚡️ 自动优选 }
   AWAvenue: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.mrs", proxy: ⚡️ 自动优选 }
-  ad: { type: http, behavior: domain, format: text, interval: 86400, url: "https://raw.githubusercontent.com/Cats-Team/AdRules/main/adrules_domainset.txt", proxy: ⚡️ 自动优选 }
-  ADgk: { type: http, behavior: domain, format: text, interval: 86400, url: "https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt", proxy: ⚡️ 自动优选 }
 # ==================== 规则 (已优化匹配逻辑) ====================
 rules:
   - RULE-SET,anti-ad,REJECT
-  - RULE-SET,ad,REJECT
   - RULE-SET,AWAvenue,REJECT
-  - RULE-SET,ADgk,REJECT
   # 1. 内网、特殊端口与本地保护 (最优先)
   - GEOIP,lan,DIRECT,no-resolve
   - GEOSITE,private,DIRECT
