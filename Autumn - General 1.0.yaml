@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "httform/claGuge"
+    url: "http64/platform/clash/e"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "httcd506122e69b19"
+    url: "httpcf4c9cd506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -153,6 +153,7 @@ rule-providers:
   CN_IP: { type: http, behavior: ipcidr, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/cn.mrs", proxy: ⚡️ 自动优选 }
   category-games: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-games.mrs", proxy: ⚡️ 自动优选 }
   games-cn: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs", proxy: ⚡️ 自动优选 }
+  YouTube: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/mrs/youtube.mrs", proxy: ⚡️ 自动优选 }
 
 # ==================== 规则 (已优化匹配逻辑) ====================
 rules:
@@ -168,6 +169,7 @@ rules:
   - RULE-SET,netflix,Streaming
   - RULE-SET,GitHub,GitHub
   - RULE-SET,Apple,Apple
+  - RULE-SET,YouTube,Streaming
 
 # 4. 游戏规则
   - RULE-SET,games-cn,DIRECT
