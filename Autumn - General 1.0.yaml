@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "http64/platform/clash/e"
+    url: "htrm/clashge"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "httpcf4c9cd506122e69b19"
+    url: "htt506122e69b19"
     type: http
     interval: 86400
     health-check:
@@ -123,14 +123,14 @@ proxy-groups:
   - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "(?i)香港|HK|日本|JP|新加坡|SG", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
   - { name: Streaming, type: fallback, interval: 300, proxies: [香港-优选, 所有-手选] }
   - { name: Social-Media, type: select, proxies: [香港-优选, ⚡️ 自动优选] }
-  - { name: GitHub, type: select, proxies: [⚡️ 自动优选, 直连] }
   - { name: Apple, type: select, proxies: [直连, ⚡️ 自动优选] }
-  - { name: Game, type: select, proxies: [直连, ⚡️ 自动优选, 所有-手选] }
+  - { name: Game, type: select, proxies: [直连, 香港-优选, ⚡️ 自动优选, 所有-手选] }
   - { name: AI, type: select, proxies: [香港-优选,美国-优选] }
   - { name: 国外, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选] }
   - { name: 国内, type: select, proxies: [直连, 拒绝] }
   - { name: 所有-手选, type: select, include-all: true, filter: "^((?!(直连|拒绝)).)*$" }
-  - { name: 香港-优选, type: url-test, include-all: true, filter: "(?i)香港|HK", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
+  - { name: 香港-优选, type: url-test, include-all: true, filter: "^(?=.*(HK|香港))(?!.*(日本|韩国|JP|KR|新加坡|英国)).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
+  - { name: 香港-大流量, type: url-test, include-all: true, filter: "^(?=.*(香港))(?!.*(日本|韩国|JP|KR|新加坡|英国|HK)).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
   - { name: 台湾-手选, type: select, include-all: true, filter: "(?i)台湾|台灣|TW|Tai Wan|🇹🇼" }
   - { name: 日本-手选, type: select, include-all: true, filter: "(?i)日本|JP|🇯🇵" }
   - { name: 新加坡-手选, type: select, include-all: true, filter: "(?i)新加坡|SG|🇸🇬" }
@@ -167,7 +167,7 @@ rules:
   - RULE-SET,Gemini,香港-优选
   - RULE-SET,OpenAI,AI
   - RULE-SET,netflix,Streaming
-  - RULE-SET,GitHub,GitHub
+  - RULE-SET,GitHub,香港-优选
   - RULE-SET,Apple,Apple
   - RULE-SET,YouTube,Streaming
 
