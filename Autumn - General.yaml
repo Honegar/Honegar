@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "hte"
+    url: "httge"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "h9b19"
+    url: "ht19"
     type: http
     interval: 86400
     health-check:
@@ -176,7 +176,7 @@ rules:
 
 # 4. 游戏规则
   - RULE-SET,games-cn,DIRECT
-  - RULE-SET,category-games,Game
+  - RULE-SET,category-games,香港-优选
   - RULE-SET,Microsoft,DIRECT    # 微软建议直连，如需走代理可改为 国外/GitHub
   
   - DST-PORT,63219,DIRECT
