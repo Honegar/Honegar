@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "httge"
+    url: "httuge"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "htb19"
+    url: "ht19"
     type: http
     interval: 86400
     health-check:
@@ -103,7 +103,6 @@ dns:
     - 223.5.5.5
     - 119.29.29.29
   proxy-server-nameserver:
-    - 114.114.114.114
     - 223.5.5.5
     - 119.29.29.29
   nameserver:
@@ -114,7 +113,6 @@ dns:
       - 223.5.5.5
       - 119.29.29.29
     "rule-set:geolocation-!cn":
-      - 1.1.1.1
       - "https://dns.cloudflare.com/dns-query"
       - "https://dns.google/dns-query"
    
