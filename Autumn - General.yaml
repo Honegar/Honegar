@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "htb19"
+    url: "htt19"
     type: http
     interval: 86400
     health-check:
@@ -123,7 +123,6 @@ proxy-groups:
   - { name: Social-Media, type: select, proxies: [香港-优选, ⚡️ 自动优选] }
   - { name: Apple, type: select, proxies: [直连, ⚡️ 自动优选] }
   - { name: Game, type: select, proxies: [直连, 香港-优选, ⚡️ 自动优选, 所有-手选] }
-  - { name: AI, type: select, proxies: [香港-优选,美国-优选] }
   - { name: 国外, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选] }
   - { name: 国内, type: select, proxies: [直连, 拒绝] }
   - { name: 所有-手选, type: select, include-all: true, filter: "^((?!(直连|拒绝)).)*$" }
@@ -166,7 +165,7 @@ rules:
   - RULE-SET,Telegram_IP,Social-Media
   - RULE-SET,Telegram,Social-Media
   - RULE-SET,Gemini,香港-优选
-  - RULE-SET,OpenAI,AI
+  - RULE-SET,OpenAI,新加坡-手选
   - RULE-SET,netflix,Streaming
   - RULE-SET,GitHub,香港-优选
   - RULE-SET,Apple,Apple
