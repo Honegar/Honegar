@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "htuge"
+    url: "htge"
     type: http
     interval: 86400
     health-check:
