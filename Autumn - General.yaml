@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "httge"
+    url: "htuge"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "ht9"
+    url: "ht19"
     type: http
     interval: 86400
     health-check:
@@ -151,10 +151,10 @@ rule-providers:
   category-games: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-games.mrs", proxy: ⚡️ 自动优选 }
   games-cn: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs", proxy: ⚡️ 自动优选 }
   YouTube: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.mrs", proxy: ⚡️ 自动优选 }
-  AWAvenue: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.mrs", proxy: ⚡️ 自动优选 }
+  anti-ad: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/privacy-protection-tools/anti-ad.github.io/master/docs/mihomo.mrs", proxy: ⚡️ 自动优选 }
 # ==================== 规则 (已优化匹配逻辑) ====================
 rules:
-  - RULE-SET,AWAvenue,REJECT
+  - RULE-SET,anti-ad,REJECT
   # 1. 内网、特殊端口与本地保护 (最优先)
   - GEOIP,lan,DIRECT,no-resolve
   - GEOSITE,private,DIRECT
