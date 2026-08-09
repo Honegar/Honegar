@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "huge"
+    url: "httge"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "h19"
+    url: "ht9b19"
     type: http
     interval: 86400
     health-check:
@@ -119,20 +119,14 @@ dns:
 # ==================== 策略组 ====================
 proxy-groups:
   - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "(?i)香港|HK|日本|JP|新加坡|SG", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
-  - { name: Streaming, type: fallback, interval: 300, proxies: [香港-优选, 所有-手选] }
-  - { name: Social-Media, type: select, proxies: [香港-优选, ⚡️ 自动优选] }
-  - { name: Apple, type: select, proxies: [直连, ⚡️ 自动优选] }
-  - { name: Game, type: select, proxies: [直连, 香港-优选, ⚡️ 自动优选, 所有-手选] }
+  - { name: 流媒体视频, type: fallback, interval: 300, proxies: [香港-优选, 香港-大流量] }
+  - { name: Telegram, type: select, proxies: [香港-优选, ⚡️ 自动优选] }
+  - { name: 国外Game, type: select, proxies: [直连, 香港-优选] }
   - { name: 国外, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选] }
-  - { name: 国内, type: select, proxies: [直连, 拒绝] }
   - { name: 所有-手选, type: select, include-all: true, filter: "^((?!(直连|拒绝)).)*$" }
   - { name: 香港-优选, type: url-test, include-all: true, filter: "^(?=.*(HK|香港))(?!.*(日本|韩国|JP|KR|新加坡|英国)).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
   - { name: 香港-大流量, type: url-test, include-all: true, filter: "^(?=.*(香港))(?!.*(日本|韩国|JP|KR|新加坡|英国|HK)).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
-  - { name: 台湾-手选, type: select, include-all: true, filter: "(?i)台湾|台灣|TW|Tai Wan|🇹🇼" }
-  - { name: 日本-手选, type: select, include-all: true, filter: "(?i)日本|JP|🇯🇵" }
   - { name: 环大陆-优选, type: url-test, include-all: true, filter: "^(?=.*(台湾|台灣|TW|日本|韩国|新加坡))(?!.*(HK|香港|英国)).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
-  - { name: 韩国-手选, type: select, include-all: true, filter: "(?i)韩国|韓國|KR|🇰🇷" }
-  - { name: 美国-手选, type: select, include-all: true, filter: "(?i)(美国|US|🇺🇸)", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 50 }
 
 
 # ==================== 规则集 ====================
@@ -177,18 +171,18 @@ rules:
   - RULE-SET,anti-ad,REJECT
 
   # 具体的国外服务分流 (防止被后面的大规则截获)
-  - RULE-SET,Telegram_IP,Social-Media
-  - RULE-SET,Telegram,Social-Media
+  - RULE-SET,Telegram_IP,Telegram
+  - RULE-SET,Telegram,Telegram
   - RULE-SET,Gemini,香港-优选
   - RULE-SET,OpenAI,环大陆-优选
-  - RULE-SET,netflix,Streaming
+  - RULE-SET,netflix,流媒体视频
   - RULE-SET,GitHub,香港-优选
-  - RULE-SET,Apple,Apple
-  - RULE-SET,YouTube,Streaming
+  - RULE-SET,Apple,DIRECT
+  - RULE-SET,YouTube,流媒体视频
 
 # 游戏规则
   - RULE-SET,games-cn,DIRECT
-  - RULE-SET,category-games,香港-优选
+  - RULE-SET,category-games,国外Game
   - RULE-SET,Microsoft,DIRECT
 
   # 漏网之鱼处理（全局大规则）
@@ -197,4 +191,4 @@ rules:
   - RULE-SET,geolocation-!cn,国外   # 兜底非中国流量走“国外”策略组而非直接固定香港
   
   # 最终匹配
-  - MATCH,香港-优选
+  - MATCH,国外
