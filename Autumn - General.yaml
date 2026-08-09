@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "htge"
+    url: "huge"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "ht19"
+    url: "h19"
     type: http
     interval: 86400
     health-check:
@@ -54,7 +54,7 @@ keep-alive-idle: 300
 keep-alive-interval: 15
 
 # ==================== 控制面板 ====================
-external-controller: 192.168.88.2:9090
+external-controller: 192.168.88.1:9090
 secret: "2238"
 external-ui: "/etc/nikki/run"
 external-ui-name: zashboard
@@ -134,6 +134,7 @@ proxy-groups:
   - { name: 韩国-手选, type: select, include-all: true, filter: "(?i)韩国|韓國|KR|🇰🇷" }
   - { name: 美国-手选, type: select, include-all: true, filter: "(?i)(美国|US|🇺🇸)", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 50 }
 
+
 # ==================== 规则集 ====================
 rule-providers:
   fakeipfilter_domain: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/wwqgtxx/clash-rules/release/fakeip-filter.mrs", proxy: ⚡️ 自动优选}
@@ -154,30 +155,12 @@ rule-providers:
   anti-ad: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/privacy-protection-tools/anti-ad.github.io/master/docs/mihomo.mrs", proxy: ⚡️ 自动优选 }
 # ==================== 规则 (已优化匹配逻辑) ====================
 rules:
-  - RULE-SET,anti-ad,REJECT
-  # 1. 内网、特殊端口与本地保护 (最优先)
+  # 内网、特殊端口与本地保护 (最优先)
   - GEOIP,lan,DIRECT,no-resolve
   - GEOSITE,private,DIRECT
-
-  # 3. 具体的国外服务分流 (防止被后面的大规则截获)
-  - RULE-SET,Telegram_IP,Social-Media
-  - RULE-SET,Telegram,Social-Media
-  - RULE-SET,Gemini,香港-优选
-  - RULE-SET,OpenAI,环大陆-优选
-  - RULE-SET,netflix,Streaming
-  - RULE-SET,GitHub,香港-优选
-  - RULE-SET,Apple,Apple
-  - RULE-SET,YouTube,Streaming
-
-# 4. 游戏规则
-  - RULE-SET,games-cn,DIRECT
-  - RULE-SET,category-games,香港-优选
-  - RULE-SET,Microsoft,DIRECT    # 微软建议直连，如需走代理可改为 国外/GitHub
-  
   - DST-PORT,63219,DIRECT
   - SRC-PORT,63219,DIRECT
   - DST-PORT,6881-6889,DIRECT   # BT下载直连
-  - DST-PORT,22,DIRECT          # SSH直连
 
   # === 香港汇丰银行 (HSBC HK) ===
   - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
@@ -190,10 +173,28 @@ rules:
   - DOMAIN-SUFFIX,bocgroup.com,DIRECT
   - DOMAIN-KEYWORD,bochk,DIRECT
 
-  # 5. 漏网之鱼处理（全局大规则）
+  # 去广告
+  - RULE-SET,anti-ad,REJECT
+
+  # 具体的国外服务分流 (防止被后面的大规则截获)
+  - RULE-SET,Telegram_IP,Social-Media
+  - RULE-SET,Telegram,Social-Media
+  - RULE-SET,Gemini,香港-优选
+  - RULE-SET,OpenAI,环大陆-优选
+  - RULE-SET,netflix,Streaming
+  - RULE-SET,GitHub,香港-优选
+  - RULE-SET,Apple,Apple
+  - RULE-SET,YouTube,Streaming
+
+# 游戏规则
+  - RULE-SET,games-cn,DIRECT
+  - RULE-SET,category-games,香港-优选
+  - RULE-SET,Microsoft,DIRECT
+
+  # 漏网之鱼处理（全局大规则）
   - RULE-SET,CN_Site,DIRECT
   - RULE-SET,CN_IP,DIRECT,no-resolve
   - RULE-SET,geolocation-!cn,国外   # 兜底非中国流量走“国外”策略组而非直接固定香港
   
-  # 6. 最终匹配
+  # 最终匹配
   - MATCH,香港-优选
