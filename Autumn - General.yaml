@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "ht9b19"
+    url: "ht19"
     type: http
     interval: 86400
     health-check:
@@ -22,7 +22,6 @@ proxy-providers:
     proxy: 直连
 
 
-# 节点信息
 proxies:
   - {name: 直连, type: direct}
   - {name: 拒绝, type: reject}
@@ -54,7 +53,7 @@ keep-alive-idle: 300
 keep-alive-interval: 15
 
 # ==================== 控制面板 ====================
-external-controller: 192.168.88.1:9090
+external-controller: 192.168.88.2:9090
 secret: "2238"
 external-ui: "/etc/nikki/run"
 external-ui-name: zashboard
@@ -85,7 +84,7 @@ tun:
   auto-detect-interface: true
   dns-hijack:
     - 0.0.0.0:53
-
+  
 dns:
   cache-algorithm: arc
   prefer-h3: false
@@ -100,21 +99,24 @@ dns:
   fake-ip-filter:
     - "rule-set:fakeipfilter_domain"
   default-nameserver:
-    - 119.29.29.29
     - 223.5.5.5
   proxy-server-nameserver:
-    - 119.29.29.29
-    - 223.5.5.5
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+
   nameserver:
-    - 119.29.29.29
-    - 223.5.5.5
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+
   nameserver-policy:
     "rule-set:CN_Site":
-    - 119.29.29.29
-    - 223.5.5.5
+      - https://dns.alidns.com/dns-query
+      - https://doh.pub/dns-query
+
     "rule-set:geolocation-!cn":
-      - "https://dns.cloudflare.com/dns-query"
-      - "https://dns.google/dns-query"
+      - https://cloudflare-dns.com/dns-query
+      - https://dns.google/dns-query
+
    
 # ==================== 策略组 ====================
 proxy-groups:
@@ -147,6 +149,8 @@ rule-providers:
   games-cn: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs", proxy: ⚡️ 自动优选 }
   YouTube: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.mrs", proxy: ⚡️ 自动优选 }
   anti-ad: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/privacy-protection-tools/anti-ad.github.io/master/docs/mihomo.mrs", proxy: ⚡️ 自动优选 }
+  anti-ad2: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblockmihomolite.mrs", proxy: ⚡️ 自动优选 }
+ 
 # ==================== 规则 (已优化匹配逻辑) ====================
 rules:
   # 内网、特殊端口与本地保护 (最优先)
@@ -154,7 +158,6 @@ rules:
   - GEOSITE,private,DIRECT
   - DST-PORT,63219,DIRECT
   - SRC-PORT,63219,DIRECT
-  - DST-PORT,6881-6889,DIRECT   # BT下载直连
 
   # === 香港汇丰银行 (HSBC HK) ===
   - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
@@ -169,6 +172,7 @@ rules:
 
   # 去广告
   - RULE-SET,anti-ad,REJECT
+  - RULE-SET,anti-ad2,REJECT
 
   # 具体的国外服务分流 (防止被后面的大规则截获)
   - RULE-SET,Telegram_IP,Telegram
