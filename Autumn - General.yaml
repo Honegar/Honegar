@@ -149,7 +149,6 @@ rule-providers:
   games-cn: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs", proxy: ⚡️ 自动优选 }
   YouTube: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.mrs", proxy: ⚡️ 自动优选 }
   anti-ad: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/privacy-protection-tools/anti-ad.github.io/master/docs/mihomo.mrs", proxy: ⚡️ 自动优选 }
-  anti-ad2: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblockmihomolite.mrs", proxy: ⚡️ 自动优选 }
  
 # ==================== 规则 (已优化匹配逻辑) ====================
 rules:
@@ -172,7 +171,6 @@ rules:
 
   # 去广告
   - RULE-SET,anti-ad,REJECT
-  - RULE-SET,anti-ad2,REJECT
 
   # 具体的国外服务分流 (防止被后面的大规则截获)
   - RULE-SET,Telegram_IP,Telegram
