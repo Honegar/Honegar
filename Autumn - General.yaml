@@ -107,7 +107,7 @@ dns:
   nameserver-policy:
     "rule-set:CN_Site":
     - 127.0.0.1:888 #指向Adguardhome
-    - https://doh.pub/dns-query
+    - https://doh.pub/dns-query #Openwrt开机启动必备上游DNS,未配置则无法联网
      
     "rule-set:geolocation-!cn":
       - https://cloudflare-dns.com/dns-query
