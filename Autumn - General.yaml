@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "hte"
+    url: "htd487"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "h9"
+    url: "htt22e69b19"
     type: http
     interval: 86400
     health-check:
@@ -111,20 +111,18 @@ dns:
     "rule-set:geolocation-!cn":
     - https://cloudflare-dns.com/dns-query
     - https://dns.google/dns-query
-
    
 # ==================== 策略组 ====================
 proxy-groups:
   - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "(?i)香港|HK|日本|JP|新加坡|SG", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
-  - { name: 流媒体视频, type: fallback, interval: 300, proxies: [香港-优选, 香港-大流量] }
+  - { name: 流媒体视频, type: fallback, interval: 300, proxies: [⚡️ 自动优选, 香港-大流量] }
   - { name: Telegram, type: select, proxies: [TG-优选,] }
-  - { name: 国外Game, type: select, proxies: [直连, 香港-优选] }
-  - { name: 国外, type: select, proxies: [⚡️ 自动优选, 香港-优选, 所有-手选] }
+  - { name: 国外Game, type: select, proxies: [直连, ⚡️ 自动优选] }
+  - { name: 国外, type: select, proxies: [⚡️ 自动优选, 所有-手选] }
   - { name: 所有-手选, type: select, include-all: true, filter: "^((?!(直连|拒绝)).)*$" }
-  - { name: 香港-优选, type: url-test, include-all: true, filter: "^(?=.*(HK|香港))(?!.*(日本|韩国|JP|KR|新加坡|英国)).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
   - { name: TG-优选, type: url-test, include-all: true, filter: "^(?=.*(?:日本|韩国|新加坡|香港))(?!.*直连).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
-  - { name: 香港-大流量, type: url-test, include-all: true, filter: "^(?=.*(香港))(?!.*(日本|韩国|JP|KR|新加坡|英国|HK)).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
-  - { name: 环大陆-优选, type: url-test, include-all: true, filter: "^(?=.*(|日本|韩国|新加坡))(?!.*(HK|台湾|直连|香港|英国)).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
+  - { name: 香港-大流量, type: url-test, include-all: true, filter: "^(?=.*(香港|HK|hk))(?!.*(日本|韩国|JP|KR|新加坡|英国)).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
+  - { name: 环大陆-优选, type: url-test, include-all: true, filter: "^(?=.*(?:日本|韩国|SG|JP|TW|US|新加坡|台湾))(?!.*直连).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
 
 
 # ==================== 规则集 ====================
@@ -152,6 +150,12 @@ rules:
   - GEOIP,lan,DIRECT,no-resolve
   - GEOSITE,private,DIRECT
 
+  # Tailscale直连
+  - DOMAIN-SUFFIX,tailscale.com,DIRECT
+
+  # Tailscale 常用端口直连
+  - DST-PORT,41641,DIRECT
+  - SRC-PORT,41641,DIRECT
 
   # 内网、特殊端口与本地保护 (最优先)
   - DST-PORT,63219,DIRECT
@@ -171,10 +175,10 @@ rules:
   # 具体的国外服务分流 (防止被后面的大规则截获)
   - RULE-SET,Telegram_IP,Telegram
   - RULE-SET,Telegram,Telegram
-  - RULE-SET,Gemini,香港-优选
+  - RULE-SET,Gemini,⚡️ 自动优选
   - RULE-SET,OpenAI,环大陆-优选
   - RULE-SET,netflix,流媒体视频
-  - RULE-SET,GitHub,香港-优选
+  - RULE-SET,GitHub,⚡️ 自动优选
   - RULE-SET,Apple,DIRECT
   - RULE-SET,YouTube,流媒体视频
 
