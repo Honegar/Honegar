@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "htt22e69b19"
+    url: "ht19"
     type: http
     interval: 86400
     health-check:
@@ -114,15 +114,13 @@ dns:
    
 # ==================== 策略组 ====================
 proxy-groups:
-  - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "(?i)香港|HK|日本|JP|新加坡|SG", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
-  - { name: 流媒体视频, type: fallback, interval: 300, proxies: [⚡️ 自动优选, 香港-大流量] }
+  - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "^((?!(直连|拒绝)).)*$", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
+  - { name: 流媒体视频, type: fallback, interval: 300, proxies: [⚡️ 自动优选] }
   - { name: Telegram, type: select, proxies: [TG-优选,] }
   - { name: 国外Game, type: select, proxies: [直连, ⚡️ 自动优选] }
-  - { name: 国外, type: select, proxies: [⚡️ 自动优选, 所有-手选] }
-  - { name: 所有-手选, type: select, include-all: true, filter: "^((?!(直连|拒绝)).)*$" }
-  - { name: TG-优选, type: url-test, include-all: true, filter: "^(?=.*(?:日本|韩国|新加坡|香港))(?!.*直连).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
-  - { name: 香港-大流量, type: url-test, include-all: true, filter: "^(?=.*(香港|HK|hk))(?!.*(日本|韩国|JP|KR|新加坡|英国)).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
-  - { name: 环大陆-优选, type: url-test, include-all: true, filter: "^(?=.*(?:日本|韩国|SG|JP|TW|US|新加坡|台湾))(?!.*直连).*$", url: "http://cp.cloudflare.com/generate_204", interval: 180, tolerance: 30 }
+  - { name: 国外, type: select, proxies: [⚡️ 自动优选] }
+  - { name: TG-优选, type: url-test, include-all: true, filter: "^(?=.*(?:日本|韩国|新加坡|SG|香港|JP|SG))(?!.*直连).*$", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
+  - { name: 环大陆-优选, type: url-test, include-all: true, filter: "^(?=.*(?:日本|英国|韓國|韩国|SG|JP|TW|US|新加坡|台湾))(?!.*直连).*$", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
 
 
 # ==================== 规则集 ====================
