@@ -1,9 +1,7 @@
-```yaml
 # 注意规则在满足自己需求情况下，尽量做到精简，不要过度复杂，以免影响性能。
-
-# ==================== 机场订阅 ====================
+# 机场订阅
 proxy-providers:
-  Airport1:
+   Airport1:
     url: "htt612a"
     type: http
     interval: 86400
@@ -13,8 +11,8 @@ proxy-providers:
       interval: 300
     proxy: 直连
 
-  Airport2:
-    url: "htt80bd6fa"
+   Airport2:
+    url: "ht0bd6fa"
     type: http
     interval: 86400
     health-check:
@@ -113,9 +111,26 @@ dns:
 
 # ==================== 策略组 ====================
 proxy-groups:
-  - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "^((?!(直连|拒绝)).)*$", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
 
-  # 流媒体固定使用 Airport2 自动优选
+  # 全局自动测速：机场1 + 机场2
+  - name: 自动测速
+    type: url-test
+    include-all: true
+    filter: "^((?!(直连|拒绝)).)*$"
+    url: "http://cp.cloudflare.com/generate_204"
+    interval: 300
+    tolerance: 50
+
+  # 全局手动选择：自动测速 + 全部机场节点
+  - name: ⚡️ 自动优选
+    type: select
+    proxies:
+      - 自动测速
+      - 直连
+    include-all: true
+    filter: "^((?!(直连|拒绝)).)*$"
+
+  # 流媒体使用大流量额度机场，根据库存流量自行修改和选择
   - name: 流媒体视频
     type: url-test
     use:
@@ -130,7 +145,7 @@ proxy-groups:
 
   - { name: TG-优选, type: url-test, include-all: true, filter: "^(?=.*(?:日本|韩国|新加坡|SG|香港|JP|SG))(?!.*直连).*$", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
 
-  - { name: 环大陆-优选, type: url-test, include-all: true, filter: "^(?=.*(?:日本|英国|韓國|韩国|SG|JP|TW|US|新加坡|台湾))(?!.*直连).*$", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
+  - { name: 环大陆-优选, type: url-test, use: [Airport1], filter: "^(?=.*(?:日本|英国|韓國|韩国|SG|JP|TW|US|新加坡|台湾))(?!.*直连).*$", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
 
 # ==================== 规则集 ====================
 rule-providers:
