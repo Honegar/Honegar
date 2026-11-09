@@ -169,26 +169,6 @@ rules:
   - GEOIP,lan,DIRECT,no-resolve
   - GEOSITE,private,DIRECT
 
-  # Tailscale直连
-  - DOMAIN-SUFFIX,tailscale.com,DIRECT
-  - DST-PORT,41641,DIRECT
-  - SRC-PORT,41641,DIRECT
-
-  # 内网、特殊端口直连
-  - DST-PORT,63219,DIRECT
-  - SRC-PORT,63219,DIRECT
-
-  # 香港汇丰银行
-  - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
-  - DOMAIN-SUFFIX,hsbc.hk,DIRECT
-  - DOMAIN-KEYWORD,hsbc,DIRECT
-
-  # 中银香港
-  - DOMAIN-SUFFIX,bochk.com,DIRECT
-  - DOMAIN-SUFFIX,boci.com.hk,DIRECT
-  - DOMAIN-SUFFIX,bocgroup.com,DIRECT
-  - DOMAIN-KEYWORD,bochk,DIRECT
-
   # 国外服务分流
   - RULE-SET,Telegram_IP,Telegram
   - RULE-SET,Telegram,Telegram
@@ -211,4 +191,3 @@ rules:
 
   # 最终匹配
   - MATCH,国外
-```
