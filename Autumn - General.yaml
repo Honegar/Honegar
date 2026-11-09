@@ -1,7 +1,9 @@
+```yaml
 # 注意规则在满足自己需求情况下，尽量做到精简，不要过度复杂，以免影响性能。
-# 机场订阅
+
+# ==================== 机场订阅 ====================
 proxy-providers:
-   Airport1:
+  Airport1:
     url: "htt612a"
     type: http
     interval: 86400
@@ -11,7 +13,7 @@ proxy-providers:
       interval: 300
     proxy: 直连
 
-   Airport2:
+  Airport2:
     url: "htt80bd6fa"
     type: http
     interval: 86400
@@ -34,20 +36,16 @@ tproxy-port: 7894
 allow-lan: true
 bind-address: "*"
 
-# IPv6 彻底关闭策略
 ipv6: false
 prefer-ipv6: false
 
-# 进阶性能与连接优化
 log-level: warning
 find-process-mode: 'off'
 tcp-concurrent: true
 tcp-fast-open: true
 
-# 客户端指纹混淆
 global-client-fingerprint: chrome
 
-# 连接保活优化
 keep-alive-idle: 300
 keep-alive-interval: 15
 
@@ -81,7 +79,8 @@ tun:
   auto-route: true
   auto-redirect: true
   auto-detect-interface: true
-  
+
+# ==================== DNS ====================
 dns:
   cache-algorithm: arc
   prefer-h3: false
@@ -103,75 +102,94 @@ dns:
   nameserver:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
-   
+
   nameserver-policy:
     "rule-set:CN_Site":
-    - https://dns.alidns.com/dns-query
-    - https://doh.pub/dns-query
-    
+      - https://dns.alidns.com/dns-query
+      - https://doh.pub/dns-query
     "rule-set:geolocation-!cn":
-    - https://cloudflare-dns.com/dns-query
-    - https://dns.google/dns-query
-   
+      - https://cloudflare-dns.com/dns-query
+      - https://dns.google/dns-query
+
 # ==================== 策略组 ====================
 proxy-groups:
   - { name: ⚡️ 自动优选, type: url-test, include-all: true, filter: "^((?!(直连|拒绝)).)*$", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
-  - { name: 流媒体视频, type: fallback, interval: 300, proxies: [⚡️ 自动优选] }
-  - { name: Telegram, type: select, proxies: [TG-优选,] }
+
+  # 流媒体固定使用 Airport2 自动优选
+  - name: 流媒体视频
+    type: url-test
+    use:
+      - Airport2
+    url: "http://cp.cloudflare.com/generate_204"
+    interval: 300
+    tolerance: 50
+
+  - { name: Telegram, type: select, proxies: [TG-优选] }
   - { name: 国外Game, type: select, proxies: [直连, ⚡️ 自动优选] }
   - { name: 国外, type: select, proxies: [⚡️ 自动优选] }
-  - { name: TG-优选, type: url-test, include-all: true, filter: "^(?=.*(?:日本|韩国|新加坡|SG|香港|JP|SG))(?!.*直连).*$", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
-  - { name: 环大陆-优选, type: url-test, include-all: true, filter: "^(?=.*(?:日本|英国|韓國|韩国|SG|JP|TW|US|新加坡|台湾))(?!.*直连).*$", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
 
+  - { name: TG-优选, type: url-test, include-all: true, filter: "^(?=.*(?:日本|韩国|新加坡|SG|香港|JP|SG))(?!.*直连).*$", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
+
+  - { name: 环大陆-优选, type: url-test, include-all: true, filter: "^(?=.*(?:日本|英国|韓國|韩国|SG|JP|TW|US|新加坡|台湾))(?!.*直连).*$", url: "http://cp.cloudflare.com/generate_204", interval: 300, tolerance: 50 }
 
 # ==================== 规则集 ====================
 rule-providers:
   fakeipfilter_domain: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/wwqgtxx/clash-rules/release/fakeip-filter.mrs", proxy: ⚡️ 自动优选}
-  Gemini: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google-gemini.mrs" , proxy: ⚡️ 自动优选}
-  OpenAI: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/openai.mrs" , proxy: ⚡️ 自动优选}
-  Telegram: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/telegram.mrs", proxy: ⚡️ 自动优选 }
-  Telegram_IP: {type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geoip/telegram.mrs", proxy: ⚡️ 自动优选}
-  geolocation-!cn: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs", proxy: ⚡️ 自动优选}
-  Microsoft: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/microsoft.mrs", proxy: ⚡️ 自动优选 }
-  netflix: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/netflix.mrs", proxy: ⚡️ 自动优选 }
-  GitHub: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/github.mrs", proxy: ⚡️ 自动优选 }
-  Apple: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/apple.mrs", proxy: ⚡️ 自动优选 }
-  CN_Site: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/cn.mrs", proxy: ⚡️ 自动优选 }
-  CN_IP: { type: http, behavior: ipcidr, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/cn.mrs", proxy: ⚡️ 自动优选 }
-  category-games: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-games.mrs", proxy: ⚡️ 自动优选 }
-  games-cn: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs", proxy: ⚡️ 自动优选 }
-  YouTube: { type: http, behavior: domain, format: mrs, interval: 86400, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.mrs", proxy: ⚡️ 自动优选 }
- 
-# ==================== 规则 (已优化匹配逻辑) ====================
-rules:
 
-  # 原有局域网规则
+  Gemini: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google-gemini.mrs", proxy: ⚡️ 自动优选}
+
+  OpenAI: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/openai.mrs", proxy: ⚡️ 自动优选}
+
+  Telegram: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/telegram.mrs", proxy: ⚡️ 自动优选}
+
+  Telegram_IP: {type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geoip/telegram.mrs", proxy: ⚡️ 自动优选}
+
+  geolocation-!cn: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs", proxy: ⚡️ 自动优选}
+
+  Microsoft: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/microsoft.mrs", proxy: ⚡️ 自动优选}
+
+  netflix: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/netflix.mrs", proxy: ⚡️ 自动优选}
+
+  GitHub: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/github.mrs", proxy: ⚡️ 自动优选}
+
+  Apple: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/apple.mrs", proxy: ⚡️ 自动优选}
+
+  CN_Site: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/cn.mrs", proxy: ⚡️ 自动优选}
+
+  CN_IP: {type: http, behavior: ipcidr, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/cn.mrs", proxy: ⚡️ 自动优选}
+
+  category-games: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-games.mrs", proxy: ⚡️ 自动优选}
+
+  games-cn: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs", proxy: ⚡️ 自动优选}
+
+  YouTube: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.mrs", proxy: ⚡️ 自动优选}
+
+# ==================== 规则 ====================
+rules:
   - GEOIP,lan,DIRECT,no-resolve
   - GEOSITE,private,DIRECT
 
   # Tailscale直连
   - DOMAIN-SUFFIX,tailscale.com,DIRECT
-
-  # Tailscale 常用端口直连
   - DST-PORT,41641,DIRECT
   - SRC-PORT,41641,DIRECT
 
-  # 内网、特殊端口与本地保护 (最优先)
+  # 内网、特殊端口直连
   - DST-PORT,63219,DIRECT
   - SRC-PORT,63219,DIRECT
 
-  # === 香港汇丰银行 (HSBC HK) ===
+  # 香港汇丰银行
   - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
   - DOMAIN-SUFFIX,hsbc.hk,DIRECT
   - DOMAIN-KEYWORD,hsbc,DIRECT
 
-  # === 中银香港 (BOCHK) ===
+  # 中银香港
   - DOMAIN-SUFFIX,bochk.com,DIRECT
   - DOMAIN-SUFFIX,boci.com.hk,DIRECT
   - DOMAIN-SUFFIX,bocgroup.com,DIRECT
   - DOMAIN-KEYWORD,bochk,DIRECT
 
-  # 具体的国外服务分流 (防止被后面的大规则截获)
+  # 国外服务分流
   - RULE-SET,Telegram_IP,Telegram
   - RULE-SET,Telegram,Telegram
   - RULE-SET,Gemini,⚡️ 自动优选
@@ -181,15 +199,16 @@ rules:
   - RULE-SET,Apple,DIRECT
   - RULE-SET,YouTube,流媒体视频
 
-# 游戏规则
+  # 游戏规则
   - RULE-SET,games-cn,DIRECT
   - RULE-SET,category-games,国外Game
   - RULE-SET,Microsoft,DIRECT
 
-  # 漏网之鱼处理（全局大规则）
+  # 中国大陆流量
   - RULE-SET,CN_Site,DIRECT
   - RULE-SET,CN_IP,DIRECT,no-resolve
-  - RULE-SET,geolocation-!cn,国外   # 兜底非中国流量走“国外”策略组而非直接固定香港
-  
+  - RULE-SET,geolocation-!cn,国外
+
   # 最终匹配
   - MATCH,国外
+```
