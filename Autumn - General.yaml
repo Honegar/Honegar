@@ -2,7 +2,7 @@
 # 机场订阅
 proxy-providers:
    Airport1:
-    url: "https76e899071ad0612a"
+    url: "htt612a"
     type: http
     interval: 86400
     health-check:
@@ -12,7 +12,7 @@ proxy-providers:
     proxy: 直连
 
    Airport2:
-    url: "httpb19"
+    url: "htt80bd6fa"
     type: http
     interval: 86400
     health-check:
