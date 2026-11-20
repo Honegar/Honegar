@@ -18,7 +18,7 @@ dns:
 
 proxy-providers:
   Airport1:
-    url: "htbd6fa"
+    url: "h6fa"
     type: http
     interval: 86400
     health-check:
@@ -52,7 +52,6 @@ proxy-groups:
     strategy: sticky-sessions
 
 rule-providers:
-  Gemini: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google-gemini.mrs", proxy: 直连}
   OpenAI: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/openai.mrs", proxy: 直连}
   Telegram: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/telegram.mrs", proxy: 直连}
   geolocation-!cn: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs", proxy: 直连}
@@ -63,7 +62,6 @@ rules:
     - GEOIP,lan,DIRECT,no-resolve
     - GEOSITE,private,DIRECT
     - RULE-SET,OpenAI,AI-优选
-    - RULE-SET,Gemini,AI-优选
     - RULE-SET,Telegram,自动测速
     - RULE-SET,geolocation-!cn,自动测速
     - RULE-SET,CN_Site,DIRECT
