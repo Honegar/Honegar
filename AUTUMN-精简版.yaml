@@ -32,8 +32,8 @@ dns:
         - https://doh.pub/dns-query
   nameserver-policy:
     "rule-set:geolocation-!cn":
-            - https://cloudflare-dns.com/dns-query
-            - https://dns.google/dns-query
+        - https://cloudflare-dns.com/dns-query
+        - https://dns.google/dns-query
 
 # ==================== 策略组 - 只留 2 个 ====================
 proxy-groups:
@@ -57,7 +57,6 @@ proxy-groups:
 
 # ==================== 规则集 ====================
 rule-providers:
-  Gemini: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google-gemini.mrs", proxy: 直连}
   OpenAI: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/openai.mrs", proxy: 直连}
   Telegram: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/telegram.mrs", proxy: 直连}
   geolocation-!cn: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs", proxy: 直连}
@@ -71,8 +70,7 @@ rules:
 
   # AI 走 AI-优选
     - RULE-SET,OpenAI,AI-优选
-    - RULE-SET,Gemini,AI-优选
-
+    
   # 其他国外走自动测速
     - RULE-SET,Telegram,自动测速
     - RULE-SET,geolocation-!cn,自动测速
@@ -80,5 +78,6 @@ rules:
   # 国内直连
     - RULE-SET,CN_Site,DIRECT
     - RULE-SET,CN_IP,DIRECT,no-resolve
-
+  
+  # 兜底
     - MATCH,自动测速
