@@ -1,0 +1,71 @@
+port: 7890
+allow-lan: true
+bind-address: "*"
+ipv6: false
+log-level: warning
+
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: normal
+  nameserver:
+        - https://dns.alidns.com/dns-query
+        - https://doh.pub/dns-query
+  nameserver-policy:
+    "rule-set:geolocation-!cn":
+            - https://cloudflare-dns.com/dns-query
+            - https://dns.google/dns-query
+
+proxy-providers:
+  Airport1:
+    url: "htbd6fa"
+    type: http
+    interval: 86400
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+    proxy: 直连
+
+proxies:
+    - {name: 直连, type: direct}
+
+proxy-groups:
+  - name: 自动测速
+    type: smart
+    include-all: true
+    filter: "^(?!.*(AI Route|直连|拒绝)).*$"
+    url: "http://cp.cloudflare.com/generate_204"
+    interval: 60
+    tolerance: 50
+    max-failed-times: 2
+    strategy: sticky-sessions
+
+  - name: AI-优选
+    type: smart
+    use: [Airport1]
+    filter: ".*AI Route.*"
+    url: "http://cp.cloudflare.com/generate_204"
+    interval: 60
+    tolerance: 30
+    max-failed-times: 1
+    strategy: sticky-sessions
+
+rule-providers:
+  Gemini: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google-gemini.mrs", proxy: 直连}
+  OpenAI: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/openai.mrs", proxy: 直连}
+  Telegram: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/telegram.mrs", proxy: 直连}
+  geolocation-!cn: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs", proxy: 直连}
+  CN_Site: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/cn.mrs", proxy: 直连}
+  CN_IP: {type: http, behavior: ipcidr, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/cn.mrs", proxy: 直连}
+
+rules:
+    - GEOIP,lan,DIRECT,no-resolve
+    - GEOSITE,private,DIRECT
+    - RULE-SET,OpenAI,AI-优选
+    - RULE-SET,Gemini,AI-优选
+    - RULE-SET,Telegram,自动测速
+    - RULE-SET,geolocation-!cn,自动测速
+    - RULE-SET,CN_Site,DIRECT
+    - RULE-SET,CN_IP,DIRECT,no-resolve
+    - MATCH,自动测速
