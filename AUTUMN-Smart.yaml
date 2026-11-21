@@ -1,6 +1,6 @@
 proxy-providers:
   Airport1:
-    url: "hd6fa"
+    url: "ha"
     type: http
     interval: 86400
     health-check:
@@ -55,11 +55,6 @@ dns:
   nameserver:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
-
-  # 海外备用 DNS
-  fallback:
-    - https://cloudflare-dns.com/dns-query
-    - https://dns.google/dns-query
 
   # 国内外域名 DNS 分流
   nameserver-policy:
