@@ -1,6 +1,6 @@
 proxy-providers:
   Airport1:
-    url: "ht6fa"
+    url: "htt"
     type: http
     interval: 86400
     health-check:
@@ -23,29 +23,34 @@ dns:
   ipv6: false
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
+  fake-ip-ttl: 300
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
-    - '*.lan'
-    - '*.local'
-    - '*.arpa'
-    - 'localhost.ptlogin2.qq.com'
-    - '+.msftconnecttest.com'
-    - '+.msftncsi.com'
-    - '+.srv.nintendo.net'
-    - '+.stun.*.*'
-    - '+.stun.*.*.*'
+    - "*.lan"
+    - "*.local"
+    - "*.arpa"
+    - "localhost.ptlogin2.qq.com"
+    - "+.msftconnecttest.com"
+    - "+.msftncsi.com"
+    - "+.srv.nintendo.net"
+    - "+.stun.*.*"
+    - "+.stun.*.*.*"
 
-respect-rules: true
-proxy-server-nameserver:
+  respect-rules: true
+
+  proxy-server-nameserver:
     - 223.5.5.5
     - 119.29.29.29
-default-nameserver:
+
+  default-nameserver:
     - 223.5.5.5
     - 119.29.29.29
-nameserver:
+
+  nameserver:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
-nameserver-policy:
+
+  nameserver-policy:
     "rule-set:geolocation-!cn":
       - https://cloudflare-dns.com/dns-query
       - https://dns.google/dns-query
@@ -55,9 +60,9 @@ proxy-groups:
     type: smart
     include-all: true
     filter: "^(?!.*(AI Route|直连|拒绝)).*$"
-    url: "http://cp.cloudflare.com/generate_204"
-    interval: 60
-    tolerance: 50
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
+    tolerance: 100
     max-failed-times: 2
     strategy: sticky-sessions
 
@@ -66,9 +71,9 @@ proxy-groups:
     use: [Airport1]
     filter: ".*AI Route.*"
     url: "http://cp.cloudflare.com/generate_204"
-    interval: 60
-    tolerance: 30
-    max-failed-times: 1
+    interval: 300
+    tolerance: 100
+    max-failed-times: 2
     strategy: sticky-sessions
 
 rule-providers:
