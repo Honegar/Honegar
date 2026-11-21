@@ -1,6 +1,6 @@
 proxy-providers:
   Airport1:
-    url: "htt"
+    url: "hd6fa"
     type: http
     interval: 86400
     health-check:
@@ -21,9 +21,11 @@ log-level: warning
 dns:
   enable: true
   ipv6: false
+
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   fake-ip-ttl: 300
+
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
     - "*.lan"
@@ -36,22 +38,36 @@ dns:
     - "+.stun.*.*"
     - "+.stun.*.*.*"
 
+  # DNS 查询遵循路由规则
   respect-rules: true
 
+  # 代理节点域名解析：必须保持可用的直连 DNS
   proxy-server-nameserver:
     - 223.5.5.5
     - 119.29.29.29
 
+  # DNS 启动引导
   default-nameserver:
     - 223.5.5.5
     - 119.29.29.29
 
+  # 国内默认 DNS
   nameserver:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
 
+  # 海外备用 DNS
+  fallback:
+    - https://cloudflare-dns.com/dns-query
+    - https://dns.google/dns-query
+
+  # 国内外域名 DNS 分流
   nameserver-policy:
-    "rule-set:geolocation-!cn":
+    "geosite:cn":
+      - https://dns.alidns.com/dns-query
+      - https://doh.pub/dns-query
+
+    "geosite:geolocation-!cn":
       - https://cloudflare-dns.com/dns-query
       - https://dns.google/dns-query
 
