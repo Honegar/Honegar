@@ -1,6 +1,6 @@
 proxy-providers:
   Airport1:
-    url: "htbd6fa"
+    url: "h6fa"
     type: http
     interval: 86400
     health-check:
@@ -72,9 +72,9 @@ proxy-groups:
     include-all: true
     filter: "^(?!.*(AI Route|直连|拒绝)).*$"
     url: "https://www.gstatic.com/generate_204"
-    interval: 300
-    tolerance: 100
-    max-failed-times: 2
+    interval: 60
+    tolerance: 30
+    max-failed-times: 1
     strategy: sticky-sessions
 
   - name: AI-优选
