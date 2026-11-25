@@ -1,6 +1,6 @@
 proxy-providers:
   Airport1:
-    url: "ha"
+    url: "htbd6fa"
     type: http
     interval: 86400
     health-check:
@@ -93,10 +93,12 @@ rule-providers:
   geolocation-!cn: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs", proxy: 自动测速}
   CN_Site: {type: http, behavior: domain, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geosite/cn.mrs", proxy: 自动测速}
   CN_IP: {type: http, behavior: ipcidr, format: mrs, interval: 86400, url: "https://raw.githubusercontent.com/metacubex/meta-rules-dat/meta/geo/geoip/cn.mrs", proxy: 自动测速}
+  WhatsApp: {type: http,behavior: domain,format: mrs,interval: 86400,url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/whatsapp.mrs",proxy: 自动测速}
 
 rules:
     - GEOIP,lan,DIRECT,no-resolve
     - GEOSITE,private,DIRECT
+    - RULE-SET,WhatsApp,自动测速
     - RULE-SET,OpenAI,AI-优选
     - RULE-SET,Telegram,自动测速
     - RULE-SET,geolocation-!cn,自动测速
